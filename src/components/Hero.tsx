@@ -8,24 +8,23 @@ const VIDEO_SRC =
 const Hero = () => {
   return (
     <section className="relative min-h-[100svh] w-full overflow-hidden">
-      {/* Video background with photo fallback */}
+      {/* Photo base (always visible) */}
+      <img
+        src={hero}
+        alt="Luxury villa at twilight with infinity pool"
+        className="absolute inset-0 h-full w-full animate-scale-in object-cover"
+      />
+      {/* Video overlay (fades in when ready) */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        poster={hero}
         preload="metadata"
         className="absolute inset-0 h-full w-full object-cover"
       >
         <source src={VIDEO_SRC} type="video/mp4" />
       </video>
-      <img
-        src={hero}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
 
       {/* Cinematic overlays */}
       <div className="absolute inset-0 bg-gradient-hero" />
