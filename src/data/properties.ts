@@ -25,6 +25,10 @@ export type Property = {
   amenities: string[];
   host: { name: string; avatar: string; since: string; superhost: boolean };
   coords: { x: number; y: number }; // for stylized map
+  lat: number;
+  lng: number;
+  category: "Coastal" | "Mountain" | "Countryside" | "Urban";
+  nearby: { name: string; distance: string }[];
 };
 
 export const properties: Property[] = [
