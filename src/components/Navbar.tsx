@@ -1,12 +1,13 @@
 import { Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <header className="absolute inset-x-0 top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-        <a href="#" className="font-display text-2xl tracking-tight text-foreground">
+        <Link to="/" className="font-display text-2xl tracking-tight text-foreground">
           Maison<span className="text-primary">.</span>
-        </a>
+        </Link>
         <div className="hidden items-center gap-10 text-sm text-foreground/80 md:flex">
           <a href="#stays" className="transition-smooth hover:text-primary">Stays</a>
           <a href="#destinations" className="transition-smooth hover:text-primary">Destinations</a>

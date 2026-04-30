@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'leaflet/dist/leaflet.css';
 
 @tailwind base;
 @tailwind components;
@@ -81,3 +82,33 @@
   .shadow-card { box-shadow: var(--shadow-card); }
   .transition-smooth { transition: all 0.5s var(--transition-smooth); }
 }
+
+/* Leaflet dark theme tweaks */
+.leaflet-container {
+  background: hsl(var(--background));
+  font-family: inherit;
+}
+.leaflet-tile {
+  filter: brightness(0.55) contrast(1.1) saturate(0.7) hue-rotate(-10deg);
+}
+.leaflet-control-attribution {
+  background: hsl(var(--card) / 0.7) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  backdrop-filter: blur(6px);
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a { color: hsl(var(--primary)) !important; }
+.leaflet-control-zoom a {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--foreground)) !important;
+  border-radius: 4px !important;
+}
+
+/* Hide scrollbar utility for horizontal galleries */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
