@@ -57,6 +57,7 @@ export const properties: Property[] = [
       { name: "Cap d'Antibes beaches", distance: "5 min walk" },
       { name: "Monaco", distance: "45 min drive" },
     ],
+  },
   {
     id: "alpine-retreat",
     name: "Alpine Retreat",
@@ -82,6 +83,7 @@ export const properties: Property[] = [
       { name: "Zermatt village center", distance: "6 min walk" },
       { name: "Gornergrat railway", distance: "12 min walk" },
     ],
+  },
   {
     id: "tuscan-estate",
     name: "Casa del Sole",
@@ -107,6 +109,7 @@ export const properties: Property[] = [
       { name: "Montalcino vineyards", distance: "20 min drive" },
       { name: "Bagno Vignoni hot springs", distance: "15 min drive" },
     ],
+  },
   {
     id: "desert-haus",
     name: "Mojave Haus",
@@ -132,6 +135,7 @@ export const properties: Property[] = [
       { name: "Pioneertown", distance: "25 min drive" },
       { name: "Pappy & Harriet's", distance: "27 min drive" },
     ],
+  },
   {
     id: "atoll-bungalow",
     name: "Atoll Bungalow",
@@ -157,6 +161,7 @@ export const properties: Property[] = [
       { name: "Malé International", distance: "20 min speedboat" },
       { name: "Banana reef dive site", distance: "15 min boat" },
     ],
+  },
   {
     id: "skyline-loft",
     name: "Skyline Loft",
@@ -182,6 +187,7 @@ export const properties: Property[] = [
       { name: "Bryant Park", distance: "8 min walk" },
       { name: "Grand Central", distance: "10 min walk" },
     ],
+  },
 ];
 
 export const testimonials = [
