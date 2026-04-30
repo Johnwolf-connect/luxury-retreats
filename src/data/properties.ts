@@ -50,7 +50,13 @@ export const properties: Property[] = [
     amenities: ["Infinity pool", "Private chef", "Wine cellar", "Sea view", "Wi-Fi", "Air conditioning", "Fireplace", "Parking"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 58, y: 42 },
-  },
+    lat: 43.5528, lng: 7.0174,
+    category: "Coastal",
+    nearby: [
+      { name: "Antibes Old Town", distance: "8 min drive" },
+      { name: "Cap d'Antibes beaches", distance: "5 min walk" },
+      { name: "Monaco", distance: "45 min drive" },
+    ],
   {
     id: "alpine-retreat",
     name: "Alpine Retreat",
@@ -69,7 +75,13 @@ export const properties: Property[] = [
     amenities: ["Sauna", "Hot tub", "Ski-in/Ski-out", "Fireplace", "Heated floors", "Wi-Fi", "Mountain view", "EV charger"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 52, y: 38 },
-  },
+    lat: 46.0207, lng: 7.7491,
+    category: "Mountain",
+    nearby: [
+      { name: "Matterhorn viewpoint", distance: "10 min cable car" },
+      { name: "Zermatt village center", distance: "6 min walk" },
+      { name: "Gornergrat railway", distance: "12 min walk" },
+    ],
   {
     id: "tuscan-estate",
     name: "Casa del Sole",
@@ -88,7 +100,13 @@ export const properties: Property[] = [
     amenities: ["Vineyard", "Saltwater pool", "Outdoor kitchen", "Wi-Fi", "Pet friendly", "Garden", "Parking", "Fireplace"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 56, y: 46 },
-  },
+    lat: 43.0676, lng: 11.6131,
+    category: "Countryside",
+    nearby: [
+      { name: "Pienza", distance: "12 min drive" },
+      { name: "Montalcino vineyards", distance: "20 min drive" },
+      { name: "Bagno Vignoni hot springs", distance: "15 min drive" },
+    ],
   {
     id: "desert-haus",
     name: "Mojave Haus",
@@ -107,7 +125,13 @@ export const properties: Property[] = [
     amenities: ["Pool", "Stargazing deck", "Sound system", "Wi-Fi", "Air conditioning", "Outdoor shower", "Fire pit", "Parking"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 18, y: 50 },
-  },
+    lat: 33.8734, lng: -115.9010,
+    category: "Countryside",
+    nearby: [
+      { name: "Joshua Tree National Park", distance: "8 min drive" },
+      { name: "Pioneertown", distance: "25 min drive" },
+      { name: "Pappy & Harriet's", distance: "27 min drive" },
+    ],
   {
     id: "atoll-bungalow",
     name: "Atoll Bungalow",
@@ -126,7 +150,13 @@ export const properties: Property[] = [
     amenities: ["Private deck", "Butler", "Snorkeling", "Wi-Fi", "Air conditioning", "Glass floor", "Outdoor shower", "Boat transfer"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 72, y: 60 },
-  },
+    lat: 4.3795, lng: 73.5488,
+    category: "Coastal",
+    nearby: [
+      { name: "House reef snorkeling", distance: "Steps away" },
+      { name: "Malé International", distance: "20 min speedboat" },
+      { name: "Banana reef dive site", distance: "15 min boat" },
+    ],
   {
     id: "skyline-loft",
     name: "Skyline Loft",
@@ -145,7 +175,13 @@ export const properties: Property[] = [
     amenities: ["Skyline view", "Rooftop terrace", "Gym", "Wi-Fi", "Air conditioning", "Concierge", "Elevator", "Workspace"],
     host: { name: "Camille Laurent", avatar: host1, since: "2017", superhost: true },
     coords: { x: 28, y: 44 },
-  },
+    lat: 40.7484, lng: -73.9857,
+    category: "Urban",
+    nearby: [
+      { name: "Empire State Building", distance: "2 min walk" },
+      { name: "Bryant Park", distance: "8 min walk" },
+      { name: "Grand Central", distance: "10 min walk" },
+    ],
 ];
 
 export const testimonials = [
