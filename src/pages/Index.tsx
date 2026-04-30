@@ -1,16 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import PropertyGrid from "@/components/PropertyGrid";
+import MapView from "@/components/MapView";
+import HostSection from "@/components/HostSection";
+import Testimonials from "@/components/Testimonials";
+import Footer from "@/components/Footer";
+import PropertyDetail from "@/components/PropertyDetail";
+import type { Property } from "@/data/properties";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [selected, setSelected] = useState<Property | null>(null);
+
+  useEffect(() => {
+    document.title = "Maison — Curated luxury vacation rentals";
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute("content", "Maison is a privately curated collection of luxury vacation rentals — architectural villas, alpine chalets, and island retreats around the world.");
+    document.body.style.overflow = selected ? "hidden" : "";
+  }, [selected]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <main>
+      <Navbar />
+      <Hero />
+      <PropertyGrid onSelect={setSelected} />
+      <MapView />
+      <HostSection />
+      <Testimonials />
+      <Footer />
+      {selected && <PropertyDetail property={selected} onClose={() => setSelected(null)} />}
+    </main>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
