@@ -64,29 +64,18 @@ const PropertyGrid = () => {
               {t}
             </button>
           ))}
-          <PropertyFilters
-            filters={filters}
-            onChange={setFilters}
-            resultCount={list.length}
-            onClear={clearAll}
-            mobileOpen={mobileFiltersOpen}
-            setMobileOpen={setMobileFiltersOpen}
-          />
         </div>
       </motion.div>
 
       <div className="flex gap-10">
-        {/* Desktop sidebar lives in PropertyFilters render */}
-        <div className="hidden lg:block">
-          <PropertyFilters
-            filters={filters}
-            onChange={setFilters}
-            resultCount={list.length}
-            onClear={clearAll}
-            mobileOpen={false}
-            setMobileOpen={() => {}}
-          />
-        </div>
+        <PropertyFilters
+          filters={filters}
+          onChange={setFilters}
+          resultCount={list.length}
+          onClear={clearAll}
+          mobileOpen={mobileFiltersOpen}
+          setMobileOpen={setMobileFiltersOpen}
+        />
 
         <div className="flex-1">
           <p className="mb-6 text-xs uppercase tracking-wider text-muted-foreground">
