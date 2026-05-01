@@ -77,10 +77,12 @@ const PropertyGrid = () => {
           setMobileOpen={setMobileFiltersOpen}
         />
 
-        <div className="flex-1">
-          <p className="mb-6 text-xs uppercase tracking-wider text-muted-foreground">
-            Showing <span className="text-primary">{list.length}</span> {list.length === 1 ? "stay" : "stays"}
-          </p>
+        <div className="flex-1 min-w-0">
+          <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
+            <p>
+              Showing <span className="text-primary">{list.length}</span> {list.length === 1 ? "stay" : "stays"}
+            </p>
+          </div>
 
           {list.length === 0 ? (
             <motion.div
