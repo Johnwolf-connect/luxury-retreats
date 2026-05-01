@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import type { DateRange } from "react-day-picker";
 import { properties } from "@/data/properties";
 import PropertyMap from "@/components/PropertyMap";
+import Lightbox from "@/components/Lightbox";
 import Footer from "@/components/Footer";
 
 const amenityIcon = (a: string) => {
@@ -33,6 +34,7 @@ const PropertyDetailPage = () => {
 
   const [range, setRange] = useState<DateRange | undefined>();
   const [activeImg, setActiveImg] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   const galleryRef = useRef<HTMLDivElement>(null);
 
@@ -105,10 +107,11 @@ const PropertyDetailPage = () => {
             {property.gallery.concat(property.gallery).map((src, i) => (
               <button
                 key={i}
-                onClick={() => setActiveImg(i)}
-                className="relative aspect-[16/10] w-[88%] shrink-0 snap-center overflow-hidden rounded-sm sm:w-[60%] lg:w-[55%]"
+                onClick={() => setLightboxIndex(i % property.gallery.length)}
+                className="group relative aspect-[16/10] w-[88%] shrink-0 snap-center overflow-hidden rounded-sm sm:w-[60%] lg:w-[55%]"
               >
-                <img src={src} alt={`${property.name} ${i + 1}`} loading={i < 2 ? "eager" : "lazy"} className="h-full w-full object-cover transition-smooth hover:scale-105" />
+                <img src={src} alt={`${property.name} ${i + 1}`} loading={i < 2 ? "eager" : "lazy"} className="h-full w-full object-cover transition-smooth duration-700 group-hover:scale-[1.05]" />
+                <div className="pointer-events-none absolute inset-0 bg-background/0 transition-smooth group-hover:bg-background/20" />
               </button>
             ))}
           </div>
