@@ -310,6 +310,15 @@ const PropertyDetailPage = () => {
         </div>
       </div>
 
+      {/* Lightbox */}
+      <Lightbox
+        images={property.gallery}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onPrev={() => setLightboxIndex((v) => v === null ? null : (v - 1 + property.gallery.length) % property.gallery.length)}
+        onNext={() => setLightboxIndex((v) => v === null ? null : (v + 1) % property.gallery.length)}
+      />
+
       {/* Booking modal */}
       {bookingOpen && (
         <BookingModal
