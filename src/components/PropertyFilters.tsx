@@ -167,17 +167,19 @@ const PropertyFilters = ({
       </aside>
 
       {/* Mobile trigger */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="flex items-center gap-2 rounded-full border border-border/60 px-4 py-2 text-xs uppercase tracking-wider transition-smooth hover:border-primary lg:hidden"
-      >
-        <SlidersHorizontal className="h-3.5 w-3.5" /> Filters
-        {(filters.amenities.length > 0 || filters.bedrooms > 0 || filters.bathrooms > 0) && (
-          <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground">
-            {filters.amenities.length + (filters.bedrooms > 0 ? 1 : 0) + (filters.bathrooms > 0 ? 1 : 0)}
-          </span>
-        )}
-      </button>
+      <div className="mb-6 lg:hidden">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="flex w-full items-center justify-center gap-2 rounded-sm border border-border/60 bg-card/40 px-4 py-3 text-xs uppercase tracking-wider transition-smooth hover:border-primary"
+        >
+          <SlidersHorizontal className="h-3.5 w-3.5" /> Filters · {resultCount} stays
+          {(filters.amenities.length > 0 || filters.bedrooms > 0 || filters.bathrooms > 0) && (
+            <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground">
+              {filters.amenities.length + (filters.bedrooms > 0 ? 1 : 0) + (filters.bathrooms > 0 ? 1 : 0)}
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* Mobile drawer */}
       <AnimatePresence>
