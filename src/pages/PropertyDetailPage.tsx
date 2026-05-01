@@ -153,7 +153,7 @@ const PropertyDetailPage = () => {
 
             {/* Host card */}
             <div className="border-b border-border/40 py-8">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <div className="relative">
                   <img src={property.host.avatar} alt={property.host.name} className="h-16 w-16 rounded-full object-cover ring-2 ring-primary/30" />
                   {property.host.superhost && (
@@ -162,15 +162,19 @@ const PropertyDetailPage = () => {
                     </span>
                   )}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-[180px]">
                   <p className="flex items-center gap-2 font-medium">
                     Hosted by {property.host.name}
                     <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-primary">
                       <ShieldCheck className="h-3 w-3" /> Verified
                     </span>
                   </p>
-                  <p className="text-sm text-muted-foreground">Superhost · Hosting since {property.host.since} · 4.98 avg rating</p>
+                  <p className="text-sm text-muted-foreground">Superhost · Hosting since {property.host.since}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Response time: within 1 hour · 4.98 avg rating</p>
                 </div>
+                <button className="rounded-full border border-primary/60 px-5 py-2 text-xs uppercase tracking-wider text-primary transition-smooth hover:bg-primary hover:text-primary-foreground">
+                  Message host
+                </button>
               </div>
             </div>
 
@@ -221,13 +225,18 @@ const PropertyDetailPage = () => {
               <h2 className="mb-2 font-display text-2xl">Where you'll be</h2>
               <p className="mb-6 text-sm text-muted-foreground">{property.location}, {property.country}</p>
               <PropertyMap property={property} />
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {property.nearby.map((n) => (
-                  <div key={n.name} className="rounded-sm border border-border/40 bg-card/40 px-4 py-3">
-                    <p className="text-sm">{n.name}</p>
-                    <p className="text-xs text-muted-foreground">{n.distance}</p>
-                  </div>
-                ))}
+              <div className="mt-8">
+                <p className="mb-4 text-xs uppercase tracking-[0.3em] text-primary">What's nearby</p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {property.nearby.map((n) => (
+                    <div key={n.name} className="rounded-sm border border-border/40 bg-card/40 px-4 py-3 transition-smooth hover:border-primary/40 hover:bg-card">
+                      <p className="flex items-center gap-2 text-sm">
+                        <MapPin className="h-3.5 w-3.5 text-primary" /> {n.name}
+                      </p>
+                      <p className="mt-1 pl-5 text-xs text-muted-foreground">{n.distance}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
