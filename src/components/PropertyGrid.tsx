@@ -67,7 +67,7 @@ const PropertyGrid = () => {
         </div>
       </motion.div>
 
-      <div className="flex gap-10">
+      <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
         <PropertyFilters
           filters={filters}
           onChange={setFilters}
