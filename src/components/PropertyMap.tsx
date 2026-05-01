@@ -46,9 +46,27 @@ const PropertyMap = ({ property }: { property: Property }) => {
         />
         <Marker position={[property.lat, property.lng]} icon={customIcon}>
           <Popup>
-            <strong>{property.name}</strong>
-            <br />
-            {property.location}
+            <div style={{ minWidth: 180 }}>
+              <strong style={{ fontSize: 14 }}>{property.name}</strong>
+              <div style={{ fontSize: 12, opacity: 0.75, marginTop: 2 }}>
+                {property.location}, {property.country}
+              </div>
+              <a
+                href={`https://www.openstreetmap.org/directions?to=${property.lat},${property.lng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  marginTop: 10,
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  color: "hsl(35 65% 58%)",
+                }}
+              >
+                Get directions →
+              </a>
+            </div>
           </Popup>
         </Marker>
       </MapContainer>
