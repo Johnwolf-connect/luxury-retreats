@@ -4,7 +4,8 @@ import Hero from "@/components/Hero";
 import PropertyGrid from "@/components/PropertyGrid";
 import MapView from "@/components/MapView";
 import HostSection from "@/components/HostSection";
-import Testimonials from "@/components/Testimonials";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+import WhyBookSection from "@/components/WhyBookSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -19,9 +20,10 @@ const Index = () => {
       <Navbar />
       <Hero />
       <PropertyGrid />
+      <WhyBookSection />
       <MapView />
       <HostSection />
-      <Testimonials />
+      <TestimonialsCarousel />
       <Footer />
     </main>
   );

@@ -190,20 +190,38 @@ export const properties: Property[] = [
   },
 ];
 
+import g1 from "@/assets/guest-1.jpg";
+import g2 from "@/assets/guest-2.jpg";
+import g3 from "@/assets/guest-3.jpg";
+import g4 from "@/assets/guest-4.jpg";
+
 export const testimonials = [
   {
     name: "Eleanor Whitfield",
-    place: "Stayed at Villa Azure",
-    quote: "Every detail was considered. The kind of stay you replay in your mind for weeks.",
+    place: "Villa Azure · Côte d'Azur",
+    quote: "Every detail was considered. The kind of stay you replay in your mind for weeks. Our concierge anticipated needs we hadn't even articulated.",
+    rating: 5,
+    avatar: g1,
   },
   {
     name: "Marcus Aldright",
-    place: "Stayed at Alpine Retreat",
-    quote: "Effortlessly luxurious. We never wanted to leave the fireplace, except for the sauna.",
+    place: "Alpine Retreat · Zermatt",
+    quote: "Effortlessly luxurious. We never wanted to leave the fireplace, except for the sauna. Maison made the impossible feel routine.",
+    rating: 5,
+    avatar: g2,
   },
   {
     name: "Priya Naveen",
-    place: "Stayed at Casa del Sole",
-    quote: "Sun, stone, and silence. Maison set a new bar for what a holiday can feel like.",
+    place: "Casa del Sole · Val d'Orcia",
+    quote: "Sun, stone, and silence. Maison set a new bar for what a holiday can feel like — every morning began with espresso on a terrace older than my country.",
+    rating: 5,
+    avatar: g3,
+  },
+  {
+    name: "Henrik Sørensen",
+    place: "Atoll Bungalow · Maldives",
+    quote: "From the speedboat transfer to the candlelit dinner on our deck, every moment felt designed. Easily our most memorable trip in twenty years.",
+    rating: 5,
+    avatar: g4,
   },
 ];
