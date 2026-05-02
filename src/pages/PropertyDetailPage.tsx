@@ -323,7 +323,7 @@ const PropertyDetailPage = () => {
       {bookingOpen && (
         <BookingModal
           property={property}
-          range={range}
+          initialRange={range}
           onClose={() => setBookingOpen(false)}
         />
       )}
