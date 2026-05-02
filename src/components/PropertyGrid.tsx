@@ -81,7 +81,7 @@ const PropertyGrid = () => {
         <div className="flex-1 min-w-0">
           <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
             <p>
-              Showing <span className="text-primary">{list.length}</span> {list.length === 1 ? "stay" : "stays"}
+              Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "stay" : "stays"}
             </p>
           </div>
 
