@@ -9,7 +9,10 @@ export type Filters = {
   bedrooms: number;
   bathrooms: number;
   amenities: string[];
+  propertyType: string;
 };
+
+export const PROPERTY_TYPES = ["Any", "Villa", "Chalet", "Estate", "Bungalow", "Loft", "Haus"] as const;
 
 export const AMENITY_OPTIONS = [
   { key: "Pool", icon: Waves },
@@ -28,6 +31,7 @@ export const DEFAULT_FILTERS: Filters = {
   bedrooms: 0,
   bathrooms: 0,
   amenities: [],
+  propertyType: "Any",
 };
 
 const PropertyFilters = ({
