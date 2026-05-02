@@ -53,6 +53,7 @@ export const properties: Property[] = [
     coords: { x: 58, y: 42 },
     lat: 43.5528, lng: 7.0174,
     category: "Coastal",
+    propertyType: "Villa",
     nearby: [
       { name: "Antibes Old Town", distance: "8 min drive" },
       { name: "Cap d'Antibes beaches", distance: "5 min walk" },
@@ -79,6 +80,7 @@ export const properties: Property[] = [
     coords: { x: 52, y: 38 },
     lat: 46.0207, lng: 7.7491,
     category: "Mountain",
+    propertyType: "Chalet",
     nearby: [
       { name: "Matterhorn viewpoint", distance: "10 min cable car" },
       { name: "Zermatt village center", distance: "6 min walk" },
@@ -105,6 +107,7 @@ export const properties: Property[] = [
     coords: { x: 56, y: 46 },
     lat: 43.0676, lng: 11.6131,
     category: "Countryside",
+    propertyType: "Estate",
     nearby: [
       { name: "Pienza", distance: "12 min drive" },
       { name: "Montalcino vineyards", distance: "20 min drive" },
@@ -131,6 +134,7 @@ export const properties: Property[] = [
     coords: { x: 18, y: 50 },
     lat: 33.8734, lng: -115.9010,
     category: "Countryside",
+    propertyType: "Haus",
     nearby: [
       { name: "Joshua Tree National Park", distance: "8 min drive" },
       { name: "Pioneertown", distance: "25 min drive" },
@@ -157,6 +161,7 @@ export const properties: Property[] = [
     coords: { x: 72, y: 60 },
     lat: 4.3795, lng: 73.5488,
     category: "Coastal",
+    propertyType: "Bungalow",
     nearby: [
       { name: "House reef snorkeling", distance: "Steps away" },
       { name: "Malé International", distance: "20 min speedboat" },
@@ -183,6 +188,7 @@ export const properties: Property[] = [
     coords: { x: 28, y: 44 },
     lat: 40.7484, lng: -73.9857,
     category: "Urban",
+    propertyType: "Loft",
     nearby: [
       { name: "Empire State Building", distance: "2 min walk" },
       { name: "Bryant Park", distance: "8 min walk" },
