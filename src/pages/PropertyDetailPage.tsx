@@ -33,6 +33,7 @@ const PropertyDetailPage = () => {
   const property = properties.find((p) => p.id === id);
 
   const [range, setRange] = useState<DateRange | undefined>();
+  const [guests, setGuests] = useState(2);
   const [activeImg, setActiveImg] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -256,10 +257,10 @@ const PropertyDetailPage = () => {
               </div>
 
               <div className="mb-3 grid grid-cols-2 gap-px overflow-hidden rounded-sm bg-border/60">
-                <BookingField label="Check in" value={range?.from?.toLocaleDateString() || "Add date"} />
-                <BookingField label="Check out" value={range?.to?.toLocaleDateString() || "Add date"} />
+                <BookingField label="Check in" value={range?.from?.toLocaleDateString() || "Add date"} onClick={() => setBookingOpen(true)} />
+                <BookingField label="Check out" value={range?.to?.toLocaleDateString() || "Add date"} onClick={() => setBookingOpen(true)} />
               </div>
-              <BookingField label="Guests" value="2 guests" full />
+              <BookingField label="Guests" value={`${guests} ${guests === 1 ? "guest" : "guests"}`} full onClick={() => setBookingOpen(true)} />
 
               <button
                 onClick={() => setBookingOpen(true)}
@@ -324,6 +325,8 @@ const PropertyDetailPage = () => {
         <BookingModal
           property={property}
           initialRange={range}
+          initialGuests={guests}
+          onCommit={(r, g) => { setRange(r); setGuests(g); }}
           onClose={() => setBookingOpen(false)}
         />
       )}
@@ -343,11 +346,18 @@ const Trust = ({ icon: Icon, text }: { icon: typeof Users; text: string }) => (
   <div className="flex items-center gap-3"><Icon className="h-4 w-4 text-primary" /> {text}</div>
 );
 
-const BookingField = ({ label, value, full }: { label: string; value: string; full?: boolean }) => (
-  <div className={cn("bg-card px-4 py-3", full && "col-span-2 mt-px")}>
+const BookingField = ({ label, value, full, onClick }: { label: string; value: string; full?: boolean; onClick?: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={cn(
+      "bg-card px-4 py-3 text-left transition-smooth hover:bg-card/70",
+      full && "col-span-2 mt-px w-full"
+    )}
+  >
     <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
     <p className="text-sm">{value}</p>
-  </div>
+  </button>
 );
 
 const Row = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
@@ -358,15 +368,17 @@ const Row = ({ label, value, bold }: { label: string; value: string; bold?: bool
 );
 
 const BookingModal = ({
-  property, initialRange, onClose,
+  property, initialRange, initialGuests, onCommit, onClose,
 }: {
   property: typeof properties[number];
   initialRange: DateRange | undefined;
+  initialGuests: number;
+  onCommit: (range: DateRange | undefined, guests: number) => void;
   onClose: () => void;
 }) => {
   const [submitted, setSubmitted] = useState(false);
   const [range, setRange] = useState<DateRange | undefined>(initialRange);
-  const [guests, setGuests] = useState(2);
+  const [guests, setGuests] = useState(initialGuests);
 
   const nights = range?.from && range?.to
     ? Math.max(1, Math.round((range.to.getTime() - range.from.getTime()) / 86400000))
@@ -401,7 +413,7 @@ const BookingModal = ({
           </div>
         ) : (
           <form
-            onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+            onSubmit={(e) => { e.preventDefault(); onCommit(range, guests); setSubmitted(true); }}
             className="space-y-6"
           >
             <div>
