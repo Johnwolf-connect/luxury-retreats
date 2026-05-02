@@ -88,6 +88,27 @@ const PropertyFilters = ({
         />
       </div>
 
+      {/* Property type */}
+      <div>
+        <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Property type</p>
+        <div className="flex flex-wrap gap-2">
+          {PROPERTY_TYPES.map((t) => (
+            <button
+              key={t}
+              onClick={() => onChange({ ...filters, propertyType: t })}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs transition-smooth",
+                filters.propertyType === t
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border/60 text-foreground/70 hover:border-primary/50"
+              )}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Bedrooms */}
       <div>
         <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Bedrooms</p>
