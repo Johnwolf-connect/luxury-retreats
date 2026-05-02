@@ -28,6 +28,7 @@ export type Property = {
   lat: number;
   lng: number;
   category: "Coastal" | "Mountain" | "Countryside" | "Urban";
+  propertyType: "Villa" | "Chalet" | "Estate" | "Bungalow" | "Loft" | "Haus";
   nearby: { name: string; distance: string }[];
 };
 
