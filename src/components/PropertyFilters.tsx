@@ -9,7 +9,10 @@ export type Filters = {
   bedrooms: number;
   bathrooms: number;
   amenities: string[];
+  propertyType: string;
 };
+
+export const PROPERTY_TYPES = ["Any", "Villa", "Chalet", "Estate", "Bungalow", "Loft", "Haus"] as const;
 
 export const AMENITY_OPTIONS = [
   { key: "Pool", icon: Waves },
@@ -28,6 +31,7 @@ export const DEFAULT_FILTERS: Filters = {
   bedrooms: 0,
   bathrooms: 0,
   amenities: [],
+  propertyType: "Any",
 };
 
 const PropertyFilters = ({
@@ -82,6 +86,27 @@ const PropertyFilters = ({
           onValueChange={(v) => onChange({ ...filters, price: [v[0], v[1]] as [number, number] })}
           className="py-2"
         />
+      </div>
+
+      {/* Property type */}
+      <div>
+        <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Property type</p>
+        <div className="flex flex-wrap gap-2">
+          {PROPERTY_TYPES.map((t) => (
+            <button
+              key={t}
+              onClick={() => onChange({ ...filters, propertyType: t })}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs transition-smooth",
+                filters.propertyType === t
+                  ? "border-primary bg-primary/10 text-primary"
+                  : "border-border/60 text-foreground/70 hover:border-primary/50"
+              )}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Bedrooms */}
@@ -173,9 +198,9 @@ const PropertyFilters = ({
           className="flex w-full items-center justify-center gap-2 rounded-sm border border-border/60 bg-card/40 px-4 py-3 text-xs uppercase tracking-wider transition-smooth hover:border-primary"
         >
           <SlidersHorizontal className="h-3.5 w-3.5" /> Filters · {resultCount} stays
-          {(filters.amenities.length > 0 || filters.bedrooms > 0 || filters.bathrooms > 0) && (
+          {(filters.amenities.length > 0 || filters.bedrooms > 0 || filters.bathrooms > 0 || filters.propertyType !== "Any") && (
             <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground">
-              {filters.amenities.length + (filters.bedrooms > 0 ? 1 : 0) + (filters.bathrooms > 0 ? 1 : 0)}
+              {filters.amenities.length + (filters.bedrooms > 0 ? 1 : 0) + (filters.bathrooms > 0 ? 1 : 0) + (filters.propertyType !== "Any" ? 1 : 0)}
             </span>
           )}
         </button>

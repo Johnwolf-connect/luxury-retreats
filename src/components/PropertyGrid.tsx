@@ -16,6 +16,7 @@ const PropertyGrid = () => {
   const list = useMemo(() => {
     return properties.filter((p) => {
       if (category !== "All" && p.category !== category) return false;
+      if (filters.propertyType !== "Any" && p.propertyType !== filters.propertyType) return false;
       if (p.price < filters.price[0] || p.price > filters.price[1]) return false;
       if (filters.bedrooms > 0 && p.bedrooms < filters.bedrooms) return false;
       if (filters.bathrooms > 0 && p.bathrooms < filters.bathrooms) return false;
@@ -80,7 +81,7 @@ const PropertyGrid = () => {
         <div className="flex-1 min-w-0">
           <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
             <p>
-              Showing <span className="text-primary">{list.length}</span> {list.length === 1 ? "stay" : "stays"}
+              Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "stay" : "stays"}
             </p>
           </div>
 

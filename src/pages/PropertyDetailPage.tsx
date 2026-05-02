@@ -323,7 +323,7 @@ const PropertyDetailPage = () => {
       {bookingOpen && (
         <BookingModal
           property={property}
-          range={range}
+          initialRange={range}
           onClose={() => setBookingOpen(false)}
         />
       )}
@@ -358,13 +358,27 @@ const Row = ({ label, value, bold }: { label: string; value: string; bold?: bool
 );
 
 const BookingModal = ({
-  property, range, onClose,
+  property, initialRange, onClose,
 }: {
   property: typeof properties[number];
-  range: DateRange | undefined;
+  initialRange: DateRange | undefined;
   onClose: () => void;
 }) => {
   const [submitted, setSubmitted] = useState(false);
+  const [range, setRange] = useState<DateRange | undefined>(initialRange);
+  const [guests, setGuests] = useState(2);
+
+  const nights = range?.from && range?.to
+    ? Math.max(1, Math.round((range.to.getTime() - range.from.getTime()) / 86400000))
+    : 0;
+  const subtotal = nights * property.price;
+  const cleaning = 240;
+  const service = Math.round(subtotal * 0.08);
+  const total = subtotal + cleaning + service;
+
+  const stepGuests = (delta: number) =>
+    setGuests((g) => Math.min(property.guests, Math.max(1, g + delta)));
+
   return (
     <div className="fixed inset-0 z-[200] flex items-end justify-center bg-background/80 backdrop-blur-md sm:items-center" onClick={onClose}>
       <motion.div
@@ -372,44 +386,89 @@ const BookingModal = ({
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg overflow-hidden rounded-t-lg border border-border/60 bg-card p-7 shadow-elegant sm:rounded-sm"
+        className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-lg border border-border/60 bg-card p-6 shadow-elegant sm:rounded-sm sm:p-8"
       >
         {submitted ? (
-          <div className="py-10 text-center">
+          <div className="py-12 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Check className="h-6 w-6" />
             </div>
-            <h3 className="font-display text-2xl">Request received</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Your concierge will confirm {property.name} within 2 hours.</p>
+            <h3 className="font-display text-2xl">Reservation confirmed</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your concierge will be in touch within 2 hours about {property.name}.
+            </p>
             <button onClick={onClose} className="mt-6 text-xs uppercase tracking-wider text-primary hover:underline">Close</button>
           </div>
         ) : (
           <form
             onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
-            className="space-y-4"
+            className="space-y-6"
           >
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-primary">Reserve</p>
               <h3 className="mt-1 font-display text-2xl">{property.name}</h3>
+              <p className="text-sm text-muted-foreground">{property.location}, {property.country}</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Check in" value={range?.from?.toLocaleDateString() || "—"} />
-              <Field label="Check out" value={range?.to?.toLocaleDateString() || "—"} />
+
+            <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+              {/* Calendar */}
+              <div>
+                <p className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">Select dates</p>
+                <div className="rounded-sm border border-border/60 bg-background p-2">
+                  <Calendar
+                    mode="range"
+                    selected={range}
+                    onSelect={setRange}
+                    numberOfMonths={1}
+                    disabled={{ before: new Date() }}
+                    className={cn("p-2 pointer-events-auto")}
+                  />
+                </div>
+              </div>
+
+              {/* Guests + price */}
+              <div className="space-y-5">
+                <div>
+                  <p className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">Guests</p>
+                  <div className="flex items-center justify-between rounded-sm border border-border/60 bg-background px-4 py-3">
+                    <span className="text-sm">{guests} {guests === 1 ? "guest" : "guests"} <span className="text-xs text-muted-foreground">(max {property.guests})</span></span>
+                    <div className="flex items-center gap-2">
+                      <button type="button" onClick={() => stepGuests(-1)} className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-foreground/70 transition-smooth hover:border-primary hover:text-primary">−</button>
+                      <button type="button" onClick={() => stepGuests(1)} className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 text-foreground/70 transition-smooth hover:border-primary hover:text-primary">+</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-sm border border-border/60 bg-background p-4 text-sm">
+                  {nights > 0 ? (
+                    <div className="space-y-2">
+                      <Row label={`$${property.price} × ${nights} nights`} value={`$${subtotal.toLocaleString()}`} />
+                      <Row label="Cleaning fee" value={`$${cleaning}`} />
+                      <Row label="Service fee" value={`$${service.toLocaleString()}`} />
+                      <div className="mt-3 border-t border-border/40 pt-3">
+                        <Row label="Total" value={`$${total.toLocaleString()}`} bold />
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-center text-xs text-muted-foreground">Select dates to see your total</p>
+                  )}
+                </div>
+
+                <label className="block">
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Special requests</span>
+                  <textarea rows={3} maxLength={500} className="mt-1 w-full resize-none rounded-sm border border-border/60 bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none" placeholder="Anniversaries, dietary needs, transfers…" />
+                </label>
+              </div>
             </div>
-            <Input label="Full name" type="text" required maxLength={100} />
-            <Input label="Email" type="email" required maxLength={255} />
-            <div className="grid grid-cols-2 gap-3">
-              <Input label="Guests" type="number" min={1} max={property.guests} defaultValue={2} />
-              <Input label="Phone" type="tel" maxLength={30} />
-            </div>
-            <label className="block">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Special requests</span>
-              <textarea rows={3} maxLength={500} className="mt-1 w-full resize-none rounded-sm border border-border/60 bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none" placeholder="Anniversaries, dietary needs, transfers…" />
-            </label>
-            <div className="flex items-center justify-end gap-3 pt-2">
+
+            <div className="flex items-center justify-end gap-3 border-t border-border/40 pt-5">
               <button type="button" onClick={onClose} className="text-xs uppercase tracking-wider text-foreground/60 hover:text-foreground">Cancel</button>
-              <button type="submit" className="bg-gradient-warm px-6 py-3 text-xs font-medium uppercase tracking-wider text-primary-foreground transition-smooth hover:opacity-90">
-                Confirm request
+              <button
+                type="submit"
+                disabled={nights === 0}
+                className="bg-gradient-warm px-7 py-3 text-xs font-medium uppercase tracking-wider text-primary-foreground transition-smooth hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Confirm reservation
               </button>
             </div>
           </form>
@@ -418,19 +477,5 @@ const BookingModal = ({
     </div>
   );
 };
-
-const Field = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-sm border border-border/60 bg-background px-3 py-2">
-    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
-    <p className="text-sm">{value}</p>
-  </div>
-);
-
-const Input = ({ label, ...props }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => (
-  <label className="block">
-    <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
-    <input {...props} className="mt-1 w-full rounded-sm border border-border/60 bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none" />
-  </label>
-);
 
 export default PropertyDetailPage;
