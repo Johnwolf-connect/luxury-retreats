@@ -1,5 +1,6 @@
-import { Search, MapPin, Calendar, Users, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
+import HeroSearch from "./HeroSearch";
 import hero from "@/assets/hero-villa.jpg";
 
 const VIDEO_SRC =
