@@ -164,4 +164,13 @@ const PropertyGrid = () => {
   );
 };
 
+const SearchPill = ({ children, onClear }: { children: React.ReactNode; onClear: () => void }) => (
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary">
+    {children}
+    <button onClick={onClear} className="opacity-70 hover:opacity-100">
+      <X className="h-3 w-3" />
+    </button>
+  </span>
+);
+
 export default PropertyGrid;
