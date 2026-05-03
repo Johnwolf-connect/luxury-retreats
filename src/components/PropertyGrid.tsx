@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { properties } from "@/data/properties";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters, { DEFAULT_FILTERS, type Filters } from "./PropertyFilters";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { useSearch } from "@/context/SearchContext";
+import { format, differenceInCalendarDays } from "date-fns";
 
 const CATEGORIES = ["All", "Coastal", "Mountain", "Countryside", "Urban"] as const;
 type Category = (typeof CATEGORIES)[number];
@@ -12,6 +14,7 @@ const PropertyGrid = () => {
   const [category, setCategory] = useState<Category>("All");
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { applied, apply } = useSearch();
 
   const list = useMemo(() => {
     return properties.filter((p) => {
@@ -27,14 +30,24 @@ const PropertyGrid = () => {
         );
         if (!allMatch) return false;
       }
+      if (applied.location.trim()) {
+        const q = applied.location.toLowerCase();
+        if (!p.location.toLowerCase().includes(q) && !p.country.toLowerCase().includes(q) && !p.name.toLowerCase().includes(q)) return false;
+      }
+      if (applied.guests > 0 && p.guests < applied.guests) return false;
       return true;
     });
-  }, [category, filters]);
+  }, [category, filters, applied]);
+
+  const nights = applied.dates?.from && applied.dates?.to ? differenceInCalendarDays(applied.dates.to, applied.dates.from) : 0;
+  const hasSearchPills = applied.location || applied.dates?.from || applied.guests > 0;
 
   const clearAll = () => {
     setFilters(DEFAULT_FILTERS);
     setCategory("All");
   };
+
+  const clearSearch = () => apply({ location: "", dates: undefined, guests: 0 });
 
   return (
     <section id="stays" className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
@@ -79,6 +92,29 @@ const PropertyGrid = () => {
         />
 
         <div className="flex-1 min-w-0">
+          {hasSearchPills && (
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Searching</span>
+              {applied.location && (
+                <SearchPill onClear={() => apply({ ...applied, location: "" })}>{applied.location}</SearchPill>
+              )}
+              {applied.dates?.from && (
+                <SearchPill onClear={() => apply({ ...applied, dates: undefined })}>
+                  {format(applied.dates.from, "MMM d")}
+                  {applied.dates.to && ` – ${format(applied.dates.to, "MMM d")}`}
+                  {nights > 0 && ` · ${nights}n`}
+                </SearchPill>
+              )}
+              {applied.guests > 0 && (
+                <SearchPill onClear={() => apply({ ...applied, guests: 0 })}>
+                  {applied.guests} {applied.guests === 1 ? "guest" : "guests"}
+                </SearchPill>
+              )}
+              <button onClick={clearSearch} className="text-[10px] uppercase tracking-wider text-primary hover:underline">
+                Clear search
+              </button>
+            </div>
+          )}
           <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
             <p>
               Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "stay" : "stays"}
@@ -127,5 +163,14 @@ const PropertyGrid = () => {
     </section>
   );
 };
+
+const SearchPill = ({ children, onClear }: { children: React.ReactNode; onClear: () => void }) => (
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary">
+    {children}
+    <button onClick={onClear} className="opacity-70 hover:opacity-100">
+      <X className="h-3 w-3" />
+    </button>
+  </span>
+);
 
 export default PropertyGrid;
