@@ -92,6 +92,29 @@ const PropertyGrid = () => {
         />
 
         <div className="flex-1 min-w-0">
+          {hasSearchPills && (
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">Searching</span>
+              {applied.location && (
+                <SearchPill onClear={() => apply({ ...applied, location: "" })}>{applied.location}</SearchPill>
+              )}
+              {applied.dates?.from && (
+                <SearchPill onClear={() => apply({ ...applied, dates: undefined })}>
+                  {format(applied.dates.from, "MMM d")}
+                  {applied.dates.to && ` – ${format(applied.dates.to, "MMM d")}`}
+                  {nights > 0 && ` · ${nights}n`}
+                </SearchPill>
+              )}
+              {applied.guests > 0 && (
+                <SearchPill onClear={() => apply({ ...applied, guests: 0 })}>
+                  {applied.guests} {applied.guests === 1 ? "guest" : "guests"}
+                </SearchPill>
+              )}
+              <button onClick={clearSearch} className="text-[10px] uppercase tracking-wider text-primary hover:underline">
+                Clear search
+              </button>
+            </div>
+          )}
           <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
             <p>
               Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "stay" : "stays"}
