@@ -57,17 +57,9 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-12 rounded-sm border border-border/50 bg-card/70 p-3 shadow-elegant backdrop-blur-2xl lg:mt-16"
+          className="mt-12 lg:mt-16"
         >
-          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm bg-border/50 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
-            <SearchField icon={MapPin} label="Where" placeholder="Anywhere" />
-            <SearchField icon={Calendar} label="When" placeholder="Add dates" />
-            <SearchField icon={Users} label="Guests" placeholder="Add guests" />
-            <button className="group flex items-center justify-center gap-2 bg-gradient-warm px-8 py-5 text-sm font-medium uppercase tracking-wider text-primary-foreground transition-smooth hover:opacity-90">
-              <Search className="h-4 w-4 transition-transform group-hover:scale-110" />
-              <span>Search</span>
-            </button>
-          </div>
+          <HeroSearch />
         </motion.div>
       </div>
 
