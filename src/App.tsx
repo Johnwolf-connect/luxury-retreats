@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import PropertyDetailPage from "./pages/PropertyDetailPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { SearchProvider } from "./context/SearchContext";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <SearchProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
