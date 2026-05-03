@@ -47,6 +47,8 @@ const PropertyGrid = () => {
     setCategory("All");
   };
 
+  const clearSearch = () => apply({ location: "", dates: undefined, guests: 0 });
+
   return (
     <section id="stays" className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
       <motion.div
