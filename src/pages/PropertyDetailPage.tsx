@@ -82,7 +82,7 @@ const PropertyDetailPage = () => {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
+      <div className="mx-auto max-w-7xl px-6 pb-28 pt-10 lg:px-10 lg:pb-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}
@@ -262,12 +262,14 @@ const PropertyDetailPage = () => {
               </div>
               <BookingField label="Guests" value={`${guests} ${guests === 1 ? "guest" : "guests"}`} full onClick={() => setBookingOpen(true)} />
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => setBookingOpen(true)}
-                className="mt-5 w-full bg-gradient-warm py-4 text-sm font-medium uppercase tracking-wider text-primary-foreground transition-smooth hover:opacity-90"
+                className="mt-5 w-full bg-gradient-warm py-4 text-sm font-medium uppercase tracking-wider text-primary-foreground shadow-elegant transition-opacity hover:opacity-95"
               >
                 Reserve
-              </button>
+              </motion.button>
               <p className="mt-3 text-center text-xs text-muted-foreground">You won't be charged yet</p>
 
               {nights > 0 && (
