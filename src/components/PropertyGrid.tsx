@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { properties } from "@/data/properties";
 import PropertyCard from "./PropertyCard";
 import PropertyFilters, { DEFAULT_FILTERS, type Filters } from "./PropertyFilters";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { useSearch } from "@/context/SearchContext";
+import { format, differenceInCalendarDays } from "date-fns";
 
 const CATEGORIES = ["All", "Coastal", "Mountain", "Countryside", "Urban"] as const;
 type Category = (typeof CATEGORIES)[number];
