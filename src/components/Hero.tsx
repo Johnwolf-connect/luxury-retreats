@@ -83,25 +83,6 @@ const Hero = () => {
   );
 };
 
-const SearchField = ({
-  icon: Icon,
-  label,
-  placeholder,
-}: {
-  icon: typeof Search;
-  label: string;
-  placeholder: string;
-}) => (
-  <label className="flex cursor-pointer items-center gap-3 bg-card px-5 py-4 transition-smooth hover:bg-muted">
-    <Icon className="h-4 w-4 shrink-0 text-primary" />
-    <div className="min-w-0 flex-1">
-      <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
-      <input
-        className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground/50 focus:outline-none"
-        placeholder={placeholder}
-      />
-    </div>
-  </label>
-);
+export default Hero;
 
 export default Hero;
