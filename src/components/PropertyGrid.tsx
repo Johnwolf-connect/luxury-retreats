@@ -14,6 +14,7 @@ const PropertyGrid = () => {
   const [category, setCategory] = useState<Category>("All");
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const { applied, apply } = useSearch();
 
   const list = useMemo(() => {
     return properties.filter((p) => {
@@ -29,9 +30,17 @@ const PropertyGrid = () => {
         );
         if (!allMatch) return false;
       }
+      if (applied.location.trim()) {
+        const q = applied.location.toLowerCase();
+        if (!p.location.toLowerCase().includes(q) && !p.country.toLowerCase().includes(q) && !p.name.toLowerCase().includes(q)) return false;
+      }
+      if (applied.guests > 0 && p.guests < applied.guests) return false;
       return true;
     });
-  }, [category, filters]);
+  }, [category, filters, applied]);
+
+  const nights = applied.dates?.from && applied.dates?.to ? differenceInCalendarDays(applied.dates.to, applied.dates.from) : 0;
+  const hasSearchPills = applied.location || applied.dates?.from || applied.guests > 0;
 
   const clearAll = () => {
     setFilters(DEFAULT_FILTERS);
