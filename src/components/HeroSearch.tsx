@@ -23,6 +23,7 @@ const HeroSearch = () => {
   const [locOpen, setLocOpen] = useState(false);
   const [locInput, setLocInput] = useState(search.location);
   const locRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setLocInput(search.location), [search.location]);
 
@@ -56,44 +57,61 @@ const HeroSearch = () => {
   const handleSearch = () => {
     const next: SearchState = { ...search, location: locInput };
     apply(next);
-    document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setLocOpen(false);
+    setTimeout(() => {
+      document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
   };
 
   return (
     <div className="rounded-sm border border-border/50 bg-card/70 p-3 shadow-elegant backdrop-blur-2xl">
       <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm bg-border/50 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
         {/* Location */}
-        <div ref={locRef} className="relative">
-          <button
-            type="button"
-            onClick={() => setLocOpen(true)}
-            className="flex w-full cursor-pointer items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted"
-          >
-            <MapPin className="h-4 w-4 shrink-0 text-primary" />
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Where</p>
-              <input
-                value={locInput}
-                onChange={(e) => {
-                  setLocInput(e.target.value);
-                  setLocOpen(true);
-                }}
-                onFocus={() => setLocOpen(true)}
-                placeholder="Anywhere"
-                className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground/50 focus:outline-none"
-              />
-            </div>
-            {locInput && (
-              <X
-                className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLocInput("");
-                  setSearch({ ...search, location: "" });
-                }}
-              />
-            )}
-          </button>
+        <div
+          ref={locRef}
+          className="relative flex items-center gap-3 bg-card px-5 py-4 transition-smooth hover:bg-muted"
+          onClick={() => {
+            setLocOpen(true);
+            inputRef.current?.focus();
+          }}
+        >
+          <MapPin className="h-4 w-4 shrink-0 text-primary" />
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Where</p>
+            <input
+              ref={inputRef}
+              value={locInput}
+              onChange={(e) => {
+                setLocInput(e.target.value);
+                setLocOpen(true);
+              }}
+              onFocus={() => setLocOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+                if (e.key === "Escape") setLocOpen(false);
+              }}
+              placeholder="Anywhere"
+              className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground/50 focus:outline-none"
+            />
+          </div>
+          {locInput && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setLocInput("");
+                setSearch({ ...search, location: "" });
+                inputRef.current?.focus();
+              }}
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="Clear location"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
           <AnimatePresence>
             {locOpen && (
               <motion.div
@@ -113,7 +131,9 @@ const HeroSearch = () => {
                   {suggestions.map((s) => (
                     <li key={s.label}>
                       <button
-                        onClick={() => {
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setLocInput(s.label);
                           setSearch({ ...search, location: s.label });
                           setLocOpen(false);
@@ -135,7 +155,7 @@ const HeroSearch = () => {
         {/* Dates */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
+            <button type="button" className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
               <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">When</p>
@@ -162,6 +182,7 @@ const HeroSearch = () => {
             <div className="flex items-center justify-between border-t border-border/40 px-4 py-3 text-xs">
               <span className="text-muted-foreground">{nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select check-in & check-out"}</span>
               <button
+                type="button"
                 onClick={() => setSearch({ ...search, dates: undefined })}
                 className="uppercase tracking-wider text-primary hover:underline"
               >
@@ -174,17 +195,17 @@ const HeroSearch = () => {
         {/* Guests */}
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
+            <button type="button" className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
               <Users className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Guests</p>
                 <p className={cn("truncate text-sm", search.guests > 0 ? "text-foreground" : "text-foreground/50")}>
-                  {search.guests > 0 ? `${search.guests} guest${search.guests > 1 ? "s" : ""}` : "Add guests"}
+                  {search.guests > 0 ? `${search.guests}${search.guests >= 5 ? "+" : ""} guest${search.guests > 1 ? "s" : ""}` : "Add guests"}
                 </p>
               </div>
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-64" align="start">
+          <PopoverContent className="w-72" align="start">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm">Guests</p>
@@ -192,6 +213,7 @@ const HeroSearch = () => {
               </div>
               <div className="flex items-center gap-3">
                 <button
+                  type="button"
                   onClick={() => setSearch({ ...search, guests: Math.max(0, search.guests - 1) })}
                   disabled={search.guests <= 0}
                   className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 transition-smooth hover:border-primary disabled:opacity-40"
@@ -200,6 +222,7 @@ const HeroSearch = () => {
                 </button>
                 <span className="w-6 text-center tabular-nums">{search.guests}</span>
                 <button
+                  type="button"
                   onClick={() => setSearch({ ...search, guests: Math.min(16, search.guests + 1) })}
                   className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 transition-smooth hover:border-primary"
                 >
@@ -208,16 +231,17 @@ const HeroSearch = () => {
               </div>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {[2, 4, 6, 8].map((n) => (
+              {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
+                  type="button"
                   onClick={() => setSearch({ ...search, guests: n })}
                   className={cn(
                     "rounded-full border px-3 py-1 text-xs transition-smooth",
                     search.guests === n ? "border-primary bg-primary/10 text-primary" : "border-border/60 hover:border-primary/50"
                   )}
                 >
-                  {n}
+                  {n}{n === 5 ? "+" : ""}
                 </button>
               ))}
             </div>
@@ -226,6 +250,7 @@ const HeroSearch = () => {
 
         {/* Search */}
         <button
+          type="button"
           onClick={handleSearch}
           className="group flex items-center justify-center gap-2 bg-gradient-warm px-8 py-5 text-sm font-medium uppercase tracking-wider text-primary-foreground transition-smooth hover:opacity-90"
         >
