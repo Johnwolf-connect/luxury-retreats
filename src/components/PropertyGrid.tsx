@@ -5,9 +5,8 @@ import PropertyCard from "./PropertyCard";
 import PropertyFilters, { DEFAULT_FILTERS, type Filters } from "./PropertyFilters";
 import { Search, X } from "lucide-react";
 import { useSearch } from "@/context/SearchContext";
-import { format, differenceInCalendarDays } from "date-fns";
 
-const CATEGORIES = ["All", "Coastal", "Mountain", "Countryside", "Urban"] as const;
+const CATEGORIES = ["All", "Buckhead", "Alpharetta", "Milton", "Sandy Springs", "Midtown", "Virginia-Highland"] as const;
 type Category = (typeof CATEGORIES)[number];
 
 const PropertyGrid = () => {
@@ -19,8 +18,12 @@ const PropertyGrid = () => {
   const list = useMemo(() => {
     return properties.filter((p) => {
       if (category !== "All" && p.category !== category) return false;
+      if (filters.listingType !== "Any" && p.listingType !== filters.listingType) return false;
       if (filters.propertyType !== "Any" && p.propertyType !== filters.propertyType) return false;
-      if (p.price < filters.price[0] || p.price > filters.price[1]) return false;
+      // For rent: convert to annualized comparable -- simpler: only filter price for sale listings
+      if (p.listingType === "Sale") {
+        if (p.price < filters.price[0] || p.price > filters.price[1]) return false;
+      }
       if (filters.bedrooms > 0 && p.bedrooms < filters.bedrooms) return false;
       if (filters.bathrooms > 0 && p.bathrooms < filters.bathrooms) return false;
       if (filters.amenities.length > 0) {
@@ -32,15 +35,19 @@ const PropertyGrid = () => {
       }
       if (applied.location.trim()) {
         const q = applied.location.toLowerCase();
-        if (!p.location.toLowerCase().includes(q) && !p.country.toLowerCase().includes(q) && !p.name.toLowerCase().includes(q)) return false;
+        if (
+          !p.location.toLowerCase().includes(q) &&
+          !p.country.toLowerCase().includes(q) &&
+          !p.name.toLowerCase().includes(q) &&
+          !p.address.toLowerCase().includes(q)
+        ) return false;
       }
-      if (applied.guests > 0 && p.guests < applied.guests) return false;
+      if (applied.guests > 0 && p.bedrooms < applied.guests) return false;
       return true;
     });
   }, [category, filters, applied]);
 
-  const nights = applied.dates?.from && applied.dates?.to ? differenceInCalendarDays(applied.dates.to, applied.dates.from) : 0;
-  const hasSearchPills = applied.location || applied.dates?.from || applied.guests > 0;
+  const hasSearchPills = applied.location || applied.guests > 0;
 
   const clearAll = () => {
     setFilters(DEFAULT_FILTERS);
@@ -50,7 +57,7 @@ const PropertyGrid = () => {
   const clearSearch = () => apply({ location: "", dates: undefined, guests: 0 });
 
   return (
-    <section id="stays" className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+    <section id="listings" className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -59,9 +66,9 @@ const PropertyGrid = () => {
         className="mb-12 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end"
       >
         <div>
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">The Collection</p>
+          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Featured Listings</p>
           <h2 className="max-w-2xl font-display text-4xl leading-tight sm:text-5xl lg:text-6xl">
-            Quietly remarkable places to stay.
+            Homes worth coming home to.
           </h2>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-wider">
@@ -98,16 +105,9 @@ const PropertyGrid = () => {
               {applied.location && (
                 <SearchPill onClear={() => apply({ ...applied, location: "" })}>{applied.location}</SearchPill>
               )}
-              {applied.dates?.from && (
-                <SearchPill onClear={() => apply({ ...applied, dates: undefined })}>
-                  {format(applied.dates.from, "MMM d")}
-                  {applied.dates.to && ` – ${format(applied.dates.to, "MMM d")}`}
-                  {nights > 0 && ` · ${nights}n`}
-                </SearchPill>
-              )}
               {applied.guests > 0 && (
                 <SearchPill onClear={() => apply({ ...applied, guests: 0 })}>
-                  {applied.guests} {applied.guests === 1 ? "guest" : "guests"}
+                  {applied.guests}+ bed{applied.guests === 1 ? "" : "s"}
                 </SearchPill>
               )}
               <button onClick={clearSearch} className="text-[10px] uppercase tracking-wider text-primary hover:underline">
@@ -117,7 +117,7 @@ const PropertyGrid = () => {
           )}
           <div className="mb-6 flex items-center justify-between text-xs uppercase tracking-wider text-muted-foreground">
             <p>
-              Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "stay" : "stays"}
+              Showing <span className="text-primary">{list.length}</span> of {properties.length} {list.length === 1 ? "home" : "homes"}
             </p>
           </div>
 
@@ -130,8 +130,7 @@ const PropertyGrid = () => {
               <Search className="mb-4 h-8 w-8 text-primary/60" />
               <h3 className="font-display text-2xl">No homes match — yet.</h3>
               <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-                Loosen a filter or two and the right place will appear. Our concierge can also
-                source homes off-collection.
+                Adjust a filter or two. Our team can also share off-market opportunities you won't see on MLS.
               </p>
               <button
                 onClick={clearAll}

@@ -1,12 +1,23 @@
-import { Star, BedDouble, Bath, Sparkles } from "lucide-react";
+import { Square, BedDouble, Bath, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Property } from "@/data/properties";
 
-const PropertyCard = ({ property, index = 0 }: { property: Property; index?: number }) => {
-  const available = property.id.length % 3 !== 0;
-  const totalEstimate = property.price * 5;
+const formatPrice = (p: Property) =>
+  p.listingType === "Rent"
+    ? `$${p.price.toLocaleString()}/mo`
+    : `$${p.price.toLocaleString()}`;
 
+const statusStyle = (s: Property["status"]) => {
+  switch (s) {
+    case "New": return "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30";
+    case "Coming Soon": return "bg-amber-500/15 text-amber-300 ring-amber-400/30";
+    case "Pending": return "bg-foreground/10 text-foreground/70 ring-border/50";
+    default: return "bg-primary/15 text-primary ring-primary/30";
+  }
+};
+
+const PropertyCard = ({ property, index = 0 }: { property: Property; index?: number }) => {
   return (
     <motion.article
       initial={{ opacity: 0, y: 32 }}
@@ -32,46 +43,39 @@ const PropertyCard = ({ property, index = 0 }: { property: Property; index?: num
           />
           <div className="absolute inset-0 bg-gradient-card opacity-90" />
 
-          {/* Top badges */}
           <div className="absolute inset-x-4 top-4 flex items-start justify-between">
-            <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider backdrop-blur-md ${available ? "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30" : "bg-foreground/10 text-foreground/70 ring-1 ring-border/50"}`}>
-              <span className={`h-1.5 w-1.5 rounded-full ${available ? "bg-emerald-400 shadow-[0_0_8px_currentColor]" : "bg-foreground/40"}`} />
-              {available ? "Available" : "Limited"}
+            <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider ring-1 backdrop-blur-md ${statusStyle(property.status)}`}>
+              <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_8px_currentColor]" />
+              {property.status}
             </span>
-            <span className="flex items-center gap-1 rounded-full bg-background/40 px-3 py-1 text-xs backdrop-blur-md">
-              <Star className="h-3 w-3 fill-primary text-primary" />
-              <span className="font-medium">{property.rating}</span>
-              <span className="text-foreground/60">({property.reviews})</span>
+            <span className="rounded-full bg-background/40 px-3 py-1 text-[10px] uppercase tracking-wider backdrop-blur-md">
+              For {property.listingType}
             </span>
           </div>
 
           <div className="absolute inset-x-0 bottom-0 p-6">
             <p className="text-xs uppercase tracking-[0.2em] text-primary/90">
-              {property.country}
+              {property.location} · {property.country}
             </p>
             <h3 className="mt-2 font-display text-2xl leading-tight text-foreground">
               {property.name}
             </h3>
-            <p className="mt-1 text-sm text-foreground/60">{property.location}</p>
+            <p className="mt-1 truncate text-xs text-foreground/55">{property.address}</p>
 
             <div className="mt-5 flex items-end justify-between border-t border-border/40 pt-4">
-              <div className="flex gap-4 text-xs text-foreground/60">
-                <span className="flex items-center gap-1.5"><BedDouble className="h-3.5 w-3.5" />{property.bedrooms}</span>
-                <span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5" />{property.bathrooms}</span>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-foreground/60">
+                <span className="flex items-center gap-1.5"><BedDouble className="h-3.5 w-3.5" />{property.bedrooms} bd</span>
+                <span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5" />{property.bathrooms} ba</span>
+                <span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5" />{property.sqft.toLocaleString()} sf</span>
               </div>
               <p className="text-right">
-                <span className="font-display text-xl text-primary">${property.price.toLocaleString()}</span>
-                <span className="text-xs text-foreground/50"> /night</span>
-                <span className="block text-[10px] uppercase tracking-wider text-foreground/40">
-                  ~${totalEstimate.toLocaleString()} / 5 nights
-                </span>
+                <span className="font-display text-xl text-primary">{formatPrice(property)}</span>
               </p>
             </div>
 
-            {/* Hover CTA */}
             <div className="pointer-events-none mt-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-              <Sparkles className="h-3 w-3" />
-              View details
+              <ArrowUpRight className="h-3 w-3" />
+              View listing
             </div>
           </div>
         </div>

@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
-  { href: "#stays", label: "Stays" },
-  { href: "#destinations", label: "Destinations" },
-  { href: "#hosts", label: "Hosts" },
-  { href: "#journal", label: "Journal" },
+  { href: "#listings", label: "Listings" },
+  { href: "#neighborhoods", label: "Neighborhoods" },
+  { href: "#market", label: "Market Insights" },
+  { href: "#team", label: "Our Team" },
 ];
 
 const Navbar = () => {
@@ -17,7 +17,7 @@ const Navbar = () => {
     <header className="absolute inset-x-0 top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
         <Link to="/" className="font-display text-2xl tracking-tight text-foreground">
-          Maison<span className="text-primary">.</span>
+          Maison Georgia<span className="text-primary">.</span>
         </Link>
         <div className="hidden items-center gap-10 text-sm text-foreground/80 md:flex">
           {links.map((l) => (
@@ -27,9 +27,9 @@ const Navbar = () => {
           ))}
         </div>
         <div className="flex items-center gap-4">
-          <button className="hidden text-sm text-foreground/80 transition-smooth hover:text-primary md:block">
-            Sign in
-          </button>
+          <a href="tel:+14045550199" className="hidden items-center gap-2 text-sm text-foreground/80 transition-smooth hover:text-primary md:flex">
+            <Phone className="h-3.5 w-3.5" /> (404) 555-0199
+          </a>
           <button
             onClick={() => setOpen(true)}
             className="rounded-full border border-border/60 p-2.5 text-foreground/80 transition-smooth hover:border-primary hover:text-primary md:hidden"
@@ -50,7 +50,7 @@ const Navbar = () => {
           >
             <div className="flex items-center justify-between px-6 py-6">
               <Link to="/" onClick={() => setOpen(false)} className="font-display text-2xl">
-                Maison<span className="text-primary">.</span>
+                Maison Georgia<span className="text-primary">.</span>
               </Link>
               <button
                 onClick={() => setOpen(false)}
@@ -79,9 +79,9 @@ const Navbar = () => {
                   {l.label}
                 </motion.a>
               ))}
-              <button className="mt-10 w-full bg-gradient-warm px-6 py-4 text-xs uppercase tracking-wider text-primary-foreground">
-                Sign in
-              </button>
+              <a href="tel:+14045550199" className="mt-10 flex w-full items-center justify-center gap-2 bg-gradient-warm px-6 py-4 text-xs uppercase tracking-wider text-primary-foreground">
+                <Phone className="h-3.5 w-3.5" /> Call (404) 555-0199
+              </a>
             </motion.div>
           </motion.div>
         )}

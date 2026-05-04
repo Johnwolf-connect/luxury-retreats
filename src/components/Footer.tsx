@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Instagram, Twitter, Facebook, Linkedin, Check, Send } from "lucide-react";
+import { Instagram, Facebook, Linkedin, Check, Send, Phone, Mail, MapPin } from "lucide-react";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -15,13 +15,12 @@ const Footer = () => {
 
   return (
     <footer className="border-t border-border/40 bg-background">
-      {/* Newsletter band */}
       <div className="border-b border-border/40">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-2 lg:items-center lg:px-10">
           <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">The Letter</p>
+            <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Market Letter</p>
             <h3 className="font-display text-3xl leading-tight sm:text-4xl">
-              Quiet dispatches from new homes, hidden corners, and the occasional invitation.
+              Off-market listings, monthly market briefs, and quiet opportunities — delivered first.
             </h3>
           </div>
           <form onSubmit={submit} className="lg:justify-self-end lg:w-full lg:max-w-md">
@@ -44,7 +43,7 @@ const Footer = () => {
               </button>
             </div>
             <p className="mt-3 text-[11px] text-muted-foreground">
-              One letter a month. Unsubscribe anytime. Read our <a href="#" className="text-primary hover:underline">privacy policy</a>.
+              One brief a month. Unsubscribe anytime.
             </p>
           </form>
         </div>
@@ -53,14 +52,19 @@ const Footer = () => {
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
         <div className="sm:col-span-2">
           <a href="#" className="font-display text-3xl">
-            Maison<span className="text-primary">.</span>
+            Maison Georgia<span className="text-primary">.</span>
           </a>
           <p className="mt-4 max-w-sm text-sm text-foreground/60">
-            A quiet collection of the world's most considered private homes — for travelers who
-            arrive looking for more than a place to sleep.
+            A boutique real estate firm representing buyers, sellers, and investors across
+            Atlanta's most considered neighborhoods. Licensed in Georgia.
           </p>
+          <div className="mt-6 space-y-2 text-sm text-foreground/70">
+            <p className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary" /> 3344 Peachtree Rd NE, Atlanta, GA 30326</p>
+            <p className="flex items-center gap-2"><Phone className="h-3.5 w-3.5 text-primary" /> (404) 555-0199</p>
+            <p className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-primary" /> hello@maisongeorgia.com</p>
+          </div>
           <div className="mt-6 flex gap-3">
-            {[Instagram, Twitter, Facebook, Linkedin].map((Icon, i) => (
+            {[Instagram, Facebook, Linkedin].map((Icon, i) => (
               <a
                 key={i}
                 href="#"
@@ -75,29 +79,29 @@ const Footer = () => {
         <div>
           <p className="mb-4 text-xs uppercase tracking-wider text-primary">Explore</p>
           <ul className="space-y-2 text-sm text-foreground/70">
-            <li><a href="#stays" className="hover:text-primary">Stays</a></li>
-            <li><a href="#destinations" className="hover:text-primary">Destinations</a></li>
-            <li><a href="#hosts" className="hover:text-primary">Hosts</a></li>
-            <li><a href="#" className="hover:text-primary">Journal</a></li>
+            <li><a href="#listings" className="hover:text-primary">Featured Listings</a></li>
+            <li><a href="#neighborhoods" className="hover:text-primary">Neighborhoods</a></li>
+            <li><a href="#market" className="hover:text-primary">Market Insights</a></li>
+            <li><a href="#team" className="hover:text-primary">Our Team</a></li>
           </ul>
         </div>
         <div>
-          <p className="mb-4 text-xs uppercase tracking-wider text-primary">Maison</p>
+          <p className="mb-4 text-xs uppercase tracking-wider text-primary">Services</p>
           <ul className="space-y-2 text-sm text-foreground/70">
-            <li><a href="#" className="hover:text-primary">About</a></li>
-            <li><a href="#" className="hover:text-primary">Become a host</a></li>
-            <li><a href="#" className="hover:text-primary">Concierge</a></li>
-            <li><a href="#" className="hover:text-primary">Contact</a></li>
+            <li><a href="#" className="hover:text-primary">Buy a home</a></li>
+            <li><a href="#" className="hover:text-primary">Sell with us</a></li>
+            <li><a href="#" className="hover:text-primary">Investment advisory</a></li>
+            <li><a href="#" className="hover:text-primary">Relocation</a></li>
           </ul>
         </div>
       </div>
       <div className="border-t border-border/40">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center lg:px-10">
-          <p>© {new Date().getFullYear()} Maison Collection. Crafted with care.</p>
+          <p>© {new Date().getFullYear()} Maison Georgia Real Estate · Licensed Brokerage in Georgia · Equal Housing Opportunity</p>
           <div className="flex gap-5">
             <a href="#" className="hover:text-primary">Privacy</a>
             <a href="#" className="hover:text-primary">Terms</a>
-            <a href="#" className="hover:text-primary">Cookies</a>
+            <a href="#" className="hover:text-primary">Fair Housing</a>
           </div>
         </div>
       </div>

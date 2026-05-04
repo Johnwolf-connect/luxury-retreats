@@ -1,9 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, MapPin, Calendar as CalendarIcon, Users, Minus, Plus, X } from "lucide-react";
-import { format, differenceInCalendarDays } from "date-fns";
-import type { DateRange } from "react-day-picker";
-import { Calendar } from "@/components/ui/calendar";
+import { Search, MapPin, Home, BedDouble, Minus, Plus, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { properties } from "@/data/properties";
 import { useSearch, type SearchState } from "@/context/SearchContext";
@@ -11,21 +8,25 @@ import { cn } from "@/lib/utils";
 
 type Suggestion = {
   label: string;
-  country: string;
-  flag: string;
-  kind: "destination" | "property";
+  sub: string;
+  icon: string;
+  kind: "neighborhood" | "city" | "property";
 };
 
 const POPULAR: Suggestion[] = [
-  { label: "Côte d'Azur", country: "France", flag: "🇫🇷", kind: "destination" },
-  { label: "French Riviera", country: "France", flag: "🇫🇷", kind: "destination" },
-  { label: "Zermatt", country: "Switzerland", flag: "🇨🇭", kind: "destination" },
-  { label: "Val d'Orcia", country: "Italy", flag: "🇮🇹", kind: "destination" },
-  { label: "Joshua Tree", country: "United States", flag: "🇺🇸", kind: "destination" },
-  { label: "Maldives", country: "Indian Ocean", flag: "🇲🇻", kind: "destination" },
-  { label: "Manhattan", country: "United States", flag: "🇺🇸", kind: "destination" },
-  { label: "Aspen", country: "United States", flag: "🇺🇸", kind: "destination" },
+  { label: "Buckhead", sub: "Atlanta, GA", icon: "🏛️", kind: "neighborhood" },
+  { label: "Alpharetta", sub: "North Fulton, GA", icon: "🌳", kind: "city" },
+  { label: "Milton", sub: "North Fulton, GA", icon: "🐎", kind: "city" },
+  { label: "Sandy Springs", sub: "North Atlanta, GA", icon: "🏞️", kind: "city" },
+  { label: "Inman Park", sub: "Intown Atlanta, GA", icon: "🌿", kind: "neighborhood" },
+  { label: "Virginia-Highland", sub: "Intown Atlanta, GA", icon: "🌳", kind: "neighborhood" },
+  { label: "Midtown", sub: "Atlanta, GA", icon: "🏙️", kind: "neighborhood" },
+  { label: "Johns Creek", sub: "North Fulton, GA", icon: "⛳" , kind: "city" },
+  { label: "Decatur", sub: "DeKalb County, GA", icon: "🏘️", kind: "city" },
+  { label: "Marietta", sub: "Cobb County, GA", icon: "🌲", kind: "city" },
 ];
+
+const PROPERTY_TYPES = ["Any", "Single Family", "Estate", "Condo", "Townhome", "New Construction", "Investment"] as const;
 
 const Highlight = ({ text, query }: { text: string; query: string }) => {
   if (!query.trim()) return <>{text}</>;
@@ -45,9 +46,10 @@ const HeroSearch = () => {
   const [locOpen, setLocOpen] = useState(false);
   const [locInput, setLocInput] = useState(search.location);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [propType, setPropType] = useState<(typeof PROPERTY_TYPES)[number]>("Any");
+  const [listingType, setListingType] = useState<"Sale" | "Rent">("Sale");
   const locRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => setLocInput(search.location), [search.location]);
 
@@ -62,35 +64,19 @@ const HeroSearch = () => {
   const suggestions = useMemo<Suggestion[]>(() => {
     const propSuggestions: Suggestion[] = properties.map((p) => ({
       label: p.name,
-      country: `${p.location}, ${p.country}`,
-      flag: "🏠",
+      sub: `${p.location}, ${p.country}`,
+      icon: "🏠",
       kind: "property",
     }));
-    const locSuggestions: Suggestion[] = properties.map((p) => ({
-      label: p.location,
-      country: p.country,
-      flag: "📍",
-      kind: "destination",
-    }));
-    const all = [...POPULAR, ...locSuggestions, ...propSuggestions];
-    const seen = new Set<string>();
-    const dedup = all.filter((s) => {
-      const k = `${s.kind}:${s.label.toLowerCase()}`;
-      if (seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-    if (!locInput.trim()) return dedup.filter((s) => s.kind === "destination").slice(0, 8);
+    const all = [...POPULAR, ...propSuggestions];
+    if (!locInput.trim()) return POPULAR.slice(0, 8);
     const q = locInput.toLowerCase();
-    return dedup
-      .filter((s) => s.label.toLowerCase().includes(q) || s.country.toLowerCase().includes(q))
+    return all
+      .filter((s) => s.label.toLowerCase().includes(q) || s.sub.toLowerCase().includes(q))
       .slice(0, 8);
   }, [locInput]);
 
   useEffect(() => setActiveIdx(0), [locInput, locOpen]);
-
-  const nights =
-    search.dates?.from && search.dates?.to ? differenceInCalendarDays(search.dates.to, search.dates.from) : 0;
 
   const selectSuggestion = (s: Suggestion) => {
     setLocInput(s.label);
@@ -99,7 +85,7 @@ const HeroSearch = () => {
     apply(next);
     setLocOpen(false);
     setTimeout(() => {
-      document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("listings")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   };
 
@@ -108,7 +94,7 @@ const HeroSearch = () => {
     apply(next);
     setLocOpen(false);
     setTimeout(() => {
-      document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("listings")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   };
 
@@ -131,7 +117,23 @@ const HeroSearch = () => {
 
   return (
     <div className="rounded-sm border border-border/50 bg-card/70 p-3 shadow-elegant backdrop-blur-2xl">
-      <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm bg-border/50 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
+      {/* For Sale / For Rent toggle */}
+      <div className="mb-3 inline-flex gap-px overflow-hidden rounded-full bg-border/50 p-px">
+        {(["Sale", "Rent"] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setListingType(t)}
+            className={cn(
+              "rounded-full px-5 py-1.5 text-[11px] uppercase tracking-wider transition-smooth",
+              listingType === t ? "bg-primary text-primary-foreground" : "bg-card text-foreground/70 hover:bg-muted"
+            )}
+          >
+            For {t}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-px overflow-hidden rounded-sm bg-border/50 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_auto]">
         {/* Location */}
         <div
           ref={locRef}
@@ -153,11 +155,10 @@ const HeroSearch = () => {
               }}
               onFocus={() => setLocOpen(true)}
               onKeyDown={onLocKeyDown}
-              placeholder="Search destinations or villas"
+              placeholder="Buckhead, Alpharetta, Inman Park…"
               autoComplete="off"
               role="combobox"
               aria-expanded={locOpen}
-              aria-autocomplete="list"
               className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground/50 focus:outline-none"
             />
           </div>
@@ -188,12 +189,12 @@ const HeroSearch = () => {
                 className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-sm border border-border/60 bg-card shadow-elegant"
               >
                 <p className="border-b border-border/40 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                  {locInput ? "Suggestions" : "Popular destinations"}
+                  {locInput ? "Suggestions" : "Popular Atlanta neighborhoods"}
                 </p>
-                <ul ref={listRef} className="max-h-72 overflow-y-auto py-1" role="listbox">
+                <ul className="max-h-72 overflow-y-auto py-1" role="listbox">
                   {suggestions.length === 0 && (
                     <li className="px-4 py-3 text-sm text-muted-foreground">
-                      No matches — our concierge can source it.
+                      No matches — our team can source off-market.
                     </li>
                   )}
                   {suggestions.map((s, i) => (
@@ -205,18 +206,16 @@ const HeroSearch = () => {
                           e.stopPropagation();
                           selectSuggestion(s);
                         }}
-                        role="option"
-                        aria-selected={activeIdx === i}
                         className={cn(
                           "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-smooth",
                           activeIdx === i ? "bg-muted" : "hover:bg-muted"
                         )}
                       >
-                        <span className="text-base">{s.flag}</span>
+                        <span className="text-base">{s.icon}</span>
                         <span className="flex-1 truncate text-foreground">
                           <Highlight text={s.label} query={locInput} />
                         </span>
-                        <span className="truncate pl-2 text-xs text-muted-foreground">{s.country}</span>
+                        <span className="truncate pl-2 text-xs text-muted-foreground">{s.sub}</span>
                       </button>
                     </li>
                   ))}
@@ -226,75 +225,56 @@ const HeroSearch = () => {
           </AnimatePresence>
         </div>
 
-        {/* Dates */}
+        {/* Property type */}
         <Popover>
           <PopoverTrigger asChild>
             <button
               type="button"
               className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted"
             >
-              <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
+              <Home className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">When</p>
-                <p
-                  className={cn(
-                    "truncate text-sm",
-                    search.dates?.from ? "text-foreground" : "text-foreground/50"
-                  )}
-                >
-                  {search.dates?.from
-                    ? search.dates.to
-                      ? `${format(search.dates.from, "MMM d")} – ${format(search.dates.to, "MMM d")} · ${nights}n`
-                      : format(search.dates.from, "MMM d, yyyy")
-                    : "Add dates"}
-                </p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Type</p>
+                <p className="truncate text-sm text-foreground">{propType === "Any" ? "All types" : propType}</p>
               </div>
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="range"
-              numberOfMonths={2}
-              selected={search.dates}
-              onSelect={(d: DateRange | undefined) => setSearch({ ...search, dates: d })}
-              disabled={(d) => d < new Date(new Date().setHours(0, 0, 0, 0))}
-              initialFocus
-              className="pointer-events-auto p-3"
-            />
-            <div className="flex items-center justify-between border-t border-border/40 px-4 py-3 text-xs">
-              <span className="text-muted-foreground">
-                {nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select check-in & check-out"}
-              </span>
-              <button
-                type="button"
-                onClick={() => setSearch({ ...search, dates: undefined })}
-                className="uppercase tracking-wider text-primary hover:underline"
-              >
-                Clear
-              </button>
+          <PopoverContent className="w-56 p-2" align="start">
+            <div className="grid gap-1">
+              {PROPERTY_TYPES.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setPropType(t)}
+                  className={cn(
+                    "rounded-sm px-3 py-2 text-left text-sm transition-smooth",
+                    propType === t ? "bg-primary/10 text-primary" : "hover:bg-muted"
+                  )}
+                >
+                  {t === "Any" ? "All types" : t}
+                </button>
+              ))}
             </div>
           </PopoverContent>
         </Popover>
 
-        {/* Guests */}
+        {/* Bedrooms */}
         <Popover>
           <PopoverTrigger asChild>
             <button
               type="button"
               className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted"
             >
-              <Users className="h-4 w-4 shrink-0 text-primary" />
+              <BedDouble className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Guests</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Bedrooms</p>
                 <p
                   className={cn(
                     "truncate text-sm",
                     search.guests > 0 ? "text-foreground" : "text-foreground/50"
                   )}
                 >
-                  {search.guests > 0
-                    ? `${search.guests}${search.guests >= 5 ? "+" : ""} guest${search.guests > 1 ? "s" : ""}`
-                    : "Add guests"}
+                  {search.guests > 0 ? `${search.guests}+ bed${search.guests === 1 ? "" : "s"}` : "Any"}
                 </p>
               </div>
             </button>
@@ -302,8 +282,8 @@ const HeroSearch = () => {
           <PopoverContent className="w-72" align="start">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm">Guests</p>
-                <p className="text-xs text-muted-foreground">Ages 13+</p>
+                <p className="text-sm">Minimum bedrooms</p>
+                <p className="text-xs text-muted-foreground">Filter by size</p>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -317,7 +297,7 @@ const HeroSearch = () => {
                 <span className="w-6 text-center tabular-nums">{search.guests}</span>
                 <button
                   type="button"
-                  onClick={() => setSearch({ ...search, guests: Math.min(16, search.guests + 1) })}
+                  onClick={() => setSearch({ ...search, guests: Math.min(8, search.guests + 1) })}
                   className="flex h-8 w-8 items-center justify-center rounded-full border border-border/60 transition-smooth hover:border-primary"
                 >
                   <Plus className="h-3 w-3" />
@@ -325,7 +305,7 @@ const HeroSearch = () => {
               </div>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {[1, 2, 3, 4, 5].map((n) => (
+              {[2, 3, 4, 5, 6].map((n) => (
                 <button
                   key={n}
                   type="button"
@@ -337,15 +317,13 @@ const HeroSearch = () => {
                       : "border-border/60 hover:border-primary/50"
                   )}
                 >
-                  {n}
-                  {n === 5 ? "+" : ""}
+                  {n}+
                 </button>
               ))}
             </div>
           </PopoverContent>
         </Popover>
 
-        {/* Search */}
         <button
           type="button"
           onClick={handleSearch}
