@@ -9,21 +9,45 @@ import { properties } from "@/data/properties";
 import { useSearch, type SearchState } from "@/context/SearchContext";
 import { cn } from "@/lib/utils";
 
-const POPULAR = [
-  { label: "Côte d'Azur", country: "France", flag: "🇫🇷" },
-  { label: "Zermatt", country: "Switzerland", flag: "🇨🇭" },
-  { label: "Val d'Orcia", country: "Italy", flag: "🇮🇹" },
-  { label: "Joshua Tree", country: "United States", flag: "🇺🇸" },
-  { label: "North Malé", country: "Maldives", flag: "🇲🇻" },
-  { label: "Manhattan", country: "United States", flag: "🇺🇸" },
+type Suggestion = {
+  label: string;
+  country: string;
+  flag: string;
+  kind: "destination" | "property";
+};
+
+const POPULAR: Suggestion[] = [
+  { label: "Côte d'Azur", country: "France", flag: "🇫🇷", kind: "destination" },
+  { label: "French Riviera", country: "France", flag: "🇫🇷", kind: "destination" },
+  { label: "Zermatt", country: "Switzerland", flag: "🇨🇭", kind: "destination" },
+  { label: "Val d'Orcia", country: "Italy", flag: "🇮🇹", kind: "destination" },
+  { label: "Joshua Tree", country: "United States", flag: "🇺🇸", kind: "destination" },
+  { label: "Maldives", country: "Indian Ocean", flag: "🇲🇻", kind: "destination" },
+  { label: "Manhattan", country: "United States", flag: "🇺🇸", kind: "destination" },
+  { label: "Aspen", country: "United States", flag: "🇺🇸", kind: "destination" },
 ];
+
+const Highlight = ({ text, query }: { text: string; query: string }) => {
+  if (!query.trim()) return <>{text}</>;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="font-medium text-primary">{text.slice(idx, idx + query.length)}</span>
+      {text.slice(idx + query.length)}
+    </>
+  );
+};
 
 const HeroSearch = () => {
   const { search, setSearch, apply } = useSearch();
   const [locOpen, setLocOpen] = useState(false);
   const [locInput, setLocInput] = useState(search.location);
+  const [activeIdx, setActiveIdx] = useState(0);
   const locRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => setLocInput(search.location), [search.location]);
 
@@ -35,24 +59,49 @@ const HeroSearch = () => {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  const suggestions = useMemo(() => {
-    const all = [
-      ...POPULAR,
-      ...properties.map((p) => ({ label: p.location, country: p.country, flag: "📍" })),
-    ];
+  const suggestions = useMemo<Suggestion[]>(() => {
+    const propSuggestions: Suggestion[] = properties.map((p) => ({
+      label: p.name,
+      country: `${p.location}, ${p.country}`,
+      flag: "🏠",
+      kind: "property",
+    }));
+    const locSuggestions: Suggestion[] = properties.map((p) => ({
+      label: p.location,
+      country: p.country,
+      flag: "📍",
+      kind: "destination",
+    }));
+    const all = [...POPULAR, ...locSuggestions, ...propSuggestions];
     const seen = new Set<string>();
     const dedup = all.filter((s) => {
-      const k = s.label.toLowerCase();
+      const k = `${s.kind}:${s.label.toLowerCase()}`;
       if (seen.has(k)) return false;
       seen.add(k);
       return true;
     });
-    if (!locInput.trim()) return dedup.slice(0, 6);
+    if (!locInput.trim()) return dedup.filter((s) => s.kind === "destination").slice(0, 8);
     const q = locInput.toLowerCase();
-    return dedup.filter((s) => s.label.toLowerCase().includes(q) || s.country.toLowerCase().includes(q)).slice(0, 8);
+    return dedup
+      .filter((s) => s.label.toLowerCase().includes(q) || s.country.toLowerCase().includes(q))
+      .slice(0, 8);
   }, [locInput]);
 
-  const nights = search.dates?.from && search.dates?.to ? differenceInCalendarDays(search.dates.to, search.dates.from) : 0;
+  useEffect(() => setActiveIdx(0), [locInput, locOpen]);
+
+  const nights =
+    search.dates?.from && search.dates?.to ? differenceInCalendarDays(search.dates.to, search.dates.from) : 0;
+
+  const selectSuggestion = (s: Suggestion) => {
+    setLocInput(s.label);
+    const next: SearchState = { ...search, location: s.label };
+    setSearch(next);
+    apply(next);
+    setLocOpen(false);
+    setTimeout(() => {
+      document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
 
   const handleSearch = () => {
     const next: SearchState = { ...search, location: locInput };
@@ -61,6 +110,23 @@ const HeroSearch = () => {
     setTimeout(() => {
       document.getElementById("stays")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
+  };
+
+  const onLocKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setLocOpen(true);
+      setActiveIdx((i) => Math.min(suggestions.length - 1, i + 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.max(0, i - 1));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (locOpen && suggestions[activeIdx]) selectSuggestion(suggestions[activeIdx]);
+      else handleSearch();
+    } else if (e.key === "Escape") {
+      setLocOpen(false);
+    }
   };
 
   return (
@@ -86,14 +152,12 @@ const HeroSearch = () => {
                 setLocOpen(true);
               }}
               onFocus={() => setLocOpen(true)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearch();
-                }
-                if (e.key === "Escape") setLocOpen(false);
-              }}
-              placeholder="Anywhere"
+              onKeyDown={onLocKeyDown}
+              placeholder="Search destinations or villas"
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={locOpen}
+              aria-autocomplete="list"
               className="w-full bg-transparent text-sm text-foreground placeholder:text-foreground/50 focus:outline-none"
             />
           </div>
@@ -103,7 +167,9 @@ const HeroSearch = () => {
               onClick={(e) => {
                 e.stopPropagation();
                 setLocInput("");
-                setSearch({ ...search, location: "" });
+                const next = { ...search, location: "" };
+                setSearch(next);
+                apply(next);
                 inputRef.current?.focus();
               }}
               className="text-muted-foreground hover:text-foreground"
@@ -124,25 +190,33 @@ const HeroSearch = () => {
                 <p className="border-b border-border/40 px-4 py-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
                   {locInput ? "Suggestions" : "Popular destinations"}
                 </p>
-                <ul className="max-h-72 overflow-y-auto py-1">
+                <ul ref={listRef} className="max-h-72 overflow-y-auto py-1" role="listbox">
                   {suggestions.length === 0 && (
-                    <li className="px-4 py-3 text-sm text-muted-foreground">No matches — our concierge can source it.</li>
+                    <li className="px-4 py-3 text-sm text-muted-foreground">
+                      No matches — our concierge can source it.
+                    </li>
                   )}
-                  {suggestions.map((s) => (
-                    <li key={s.label}>
+                  {suggestions.map((s, i) => (
+                    <li key={`${s.kind}-${s.label}`}>
                       <button
                         type="button"
+                        onMouseEnter={() => setActiveIdx(i)}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setLocInput(s.label);
-                          setSearch({ ...search, location: s.label });
-                          setLocOpen(false);
+                          selectSuggestion(s);
                         }}
-                        className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-smooth hover:bg-muted"
+                        role="option"
+                        aria-selected={activeIdx === i}
+                        className={cn(
+                          "flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-smooth",
+                          activeIdx === i ? "bg-muted" : "hover:bg-muted"
+                        )}
                       >
                         <span className="text-base">{s.flag}</span>
-                        <span className="flex-1 text-foreground">{s.label}</span>
-                        <span className="text-xs text-muted-foreground">{s.country}</span>
+                        <span className="flex-1 truncate text-foreground">
+                          <Highlight text={s.label} query={locInput} />
+                        </span>
+                        <span className="truncate pl-2 text-xs text-muted-foreground">{s.country}</span>
                       </button>
                     </li>
                   ))}
@@ -155,11 +229,19 @@ const HeroSearch = () => {
         {/* Dates */}
         <Popover>
           <PopoverTrigger asChild>
-            <button type="button" className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
+            <button
+              type="button"
+              className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted"
+            >
               <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">When</p>
-                <p className={cn("truncate text-sm", search.dates?.from ? "text-foreground" : "text-foreground/50")}>
+                <p
+                  className={cn(
+                    "truncate text-sm",
+                    search.dates?.from ? "text-foreground" : "text-foreground/50"
+                  )}
+                >
                   {search.dates?.from
                     ? search.dates.to
                       ? `${format(search.dates.from, "MMM d")} – ${format(search.dates.to, "MMM d")} · ${nights}n`
@@ -180,7 +262,9 @@ const HeroSearch = () => {
               className="pointer-events-auto p-3"
             />
             <div className="flex items-center justify-between border-t border-border/40 px-4 py-3 text-xs">
-              <span className="text-muted-foreground">{nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select check-in & check-out"}</span>
+              <span className="text-muted-foreground">
+                {nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select check-in & check-out"}
+              </span>
               <button
                 type="button"
                 onClick={() => setSearch({ ...search, dates: undefined })}
@@ -195,12 +279,22 @@ const HeroSearch = () => {
         {/* Guests */}
         <Popover>
           <PopoverTrigger asChild>
-            <button type="button" className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted">
+            <button
+              type="button"
+              className="flex w-full items-center gap-3 bg-card px-5 py-4 text-left transition-smooth hover:bg-muted"
+            >
               <Users className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Guests</p>
-                <p className={cn("truncate text-sm", search.guests > 0 ? "text-foreground" : "text-foreground/50")}>
-                  {search.guests > 0 ? `${search.guests}${search.guests >= 5 ? "+" : ""} guest${search.guests > 1 ? "s" : ""}` : "Add guests"}
+                <p
+                  className={cn(
+                    "truncate text-sm",
+                    search.guests > 0 ? "text-foreground" : "text-foreground/50"
+                  )}
+                >
+                  {search.guests > 0
+                    ? `${search.guests}${search.guests >= 5 ? "+" : ""} guest${search.guests > 1 ? "s" : ""}`
+                    : "Add guests"}
                 </p>
               </div>
             </button>
@@ -238,10 +332,13 @@ const HeroSearch = () => {
                   onClick={() => setSearch({ ...search, guests: n })}
                   className={cn(
                     "rounded-full border px-3 py-1 text-xs transition-smooth",
-                    search.guests === n ? "border-primary bg-primary/10 text-primary" : "border-border/60 hover:border-primary/50"
+                    search.guests === n
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border/60 hover:border-primary/50"
                   )}
                 >
-                  {n}{n === 5 ? "+" : ""}
+                  {n}
+                  {n === 5 ? "+" : ""}
                 </button>
               ))}
             </div>
