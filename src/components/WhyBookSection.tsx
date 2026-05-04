@@ -1,26 +1,26 @@
 import { motion } from "framer-motion";
-import { ShieldCheck, Headphones, CalendarCheck, Award } from "lucide-react";
+import { TrendingUp, Landmark, Trees, GraduationCap } from "lucide-react";
 
 const items = [
   {
-    icon: ShieldCheck,
-    title: "Secure payments",
-    body: "Bank-grade encryption and verified hosts. Your booking is protected end to end.",
+    icon: TrendingUp,
+    title: "Strong appreciation",
+    body: "Metro Atlanta home values have grown 6–8% annually over the past decade — and forecasts project continued momentum into 2026.",
   },
   {
-    icon: Headphones,
-    title: "24/7 concierge",
-    body: "A real person, anywhere you are. Restaurant, transfer, or last-minute change — handled.",
+    icon: Landmark,
+    title: "Low taxes, no limits",
+    body: "Georgia's flat 5.39% income tax and favorable property tax structure protect more of your investment compared to coastal markets.",
   },
   {
-    icon: CalendarCheck,
-    title: "Flexible cancellation",
-    body: "Free cancellation on most stays for the first 48 hours after booking.",
+    icon: GraduationCap,
+    title: "Top-rated schools",
+    body: "Forsyth, Fulton, and Cherokee counties are home to nationally ranked public schools and elite independents like Westminster and Pace.",
   },
   {
-    icon: Award,
-    title: "Handpicked homes",
-    body: "Every property visited and approved by our in-house team. No surprises, just standards.",
+    icon: Trees,
+    title: "Lifestyle, year-round",
+    body: "Mild winters, deep tree canopy, the BeltLine, the Chattahoochee, and a one-hour reach to mountains, lakes, and the coast.",
   },
 ];
 
@@ -29,9 +29,9 @@ const WhyBookSection = () => {
     <section className="border-y border-border/40 bg-card/30">
       <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
         <div className="mb-14 max-w-2xl">
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Why Maison</p>
+          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Why Georgia</p>
           <h2 className="font-display text-4xl leading-tight sm:text-5xl lg:text-6xl">
-            A standard you can feel.
+            The case for buying in Atlanta.
           </h2>
         </div>
 
