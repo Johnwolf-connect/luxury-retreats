@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SlidersHorizontal, X, Waves, ChefHat, Mountain, Sparkles, Flame, Wind, Wifi, Car } from "lucide-react";
+import { SlidersHorizontal, X, Waves, ChefHat, Wifi, Car, TreePine, Mountain, Flame, Wind, Sparkles } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
@@ -10,29 +10,34 @@ export type Filters = {
   bathrooms: number;
   amenities: string[];
   propertyType: string;
+  listingType: "Any" | "Sale" | "Rent";
 };
 
-export const PROPERTY_TYPES = ["Any", "Villa", "Chalet", "Estate", "Bungalow", "Loft", "Haus"] as const;
+export const PROPERTY_TYPES = ["Any", "Single Family", "Estate", "Condo", "Townhome", "New Construction", "Investment"] as const;
 
 export const AMENITY_OPTIONS = [
   { key: "Pool", icon: Waves },
-  { key: "Sea view", icon: Waves },
-  { key: "Chef", icon: ChefHat },
-  { key: "Mountain view", icon: Mountain },
-  { key: "Sauna", icon: Sparkles },
-  { key: "Fireplace", icon: Flame },
+  { key: "Chef kitchen", icon: ChefHat },
+  { key: "Smart home", icon: Sparkles },
+  { key: "Gated", icon: Mountain },
+  { key: "Wine cellar", icon: Flame },
+  { key: "Acreage", icon: TreePine },
+  { key: "EV charging", icon: Car },
   { key: "Air conditioning", icon: Wind },
   { key: "Wi-Fi", icon: Wifi },
-  { key: "Parking", icon: Car },
 ];
 
 export const DEFAULT_FILTERS: Filters = {
-  price: [500, 2500],
+  price: [500000, 15000000],
   bedrooms: 0,
   bathrooms: 0,
   amenities: [],
   propertyType: "Any",
+  listingType: "Any",
 };
+
+const fmtPrice = (n: number) =>
+  n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M` : `$${(n / 1000).toFixed(0)}K`;
 
 const PropertyFilters = ({
   filters,
@@ -70,18 +75,37 @@ const PropertyFilters = ({
         </button>
       </div>
 
+      {/* For Sale / For Rent */}
+      <div>
+        <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Listing</p>
+        <div className="grid grid-cols-3 gap-px overflow-hidden rounded-sm bg-border/50">
+          {(["Any", "Sale", "Rent"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => onChange({ ...filters, listingType: t })}
+              className={cn(
+                "py-2 text-xs uppercase tracking-wider transition-smooth",
+                filters.listingType === t ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
+              )}
+            >
+              {t === "Any" ? "All" : `For ${t}`}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Price */}
       <div>
         <div className="mb-3 flex items-baseline justify-between">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground">Price / night</p>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground">Price</p>
           <p className="text-sm tabular-nums text-foreground/80">
-            ${filters.price[0].toLocaleString()} – ${filters.price[1].toLocaleString()}
+            {fmtPrice(filters.price[0])} – {fmtPrice(filters.price[1])}
           </p>
         </div>
         <Slider
-          min={500}
-          max={2500}
-          step={50}
+          min={500000}
+          max={15000000}
+          step={50000}
           value={filters.price}
           onValueChange={(v) => onChange({ ...filters, price: [v[0], v[1]] as [number, number] })}
           className="py-2"
@@ -109,7 +133,6 @@ const PropertyFilters = ({
         </div>
       </div>
 
-      {/* Bedrooms */}
       <div>
         <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Bedrooms</p>
         <div className="flex flex-wrap gap-2">
@@ -130,7 +153,6 @@ const PropertyFilters = ({
         </div>
       </div>
 
-      {/* Bathrooms */}
       <div>
         <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Bathrooms</p>
         <div className="flex flex-wrap gap-2">
@@ -151,9 +173,8 @@ const PropertyFilters = ({
         </div>
       </div>
 
-      {/* Amenities */}
       <div>
-        <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Amenities</p>
+        <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground">Features</p>
         <div className="grid grid-cols-1 gap-2">
           {AMENITY_OPTIONS.map(({ key, icon: Icon }) => {
             const active = filters.amenities.includes(key);
@@ -179,34 +200,26 @@ const PropertyFilters = ({
 
       <div className="rounded-sm border border-border/40 bg-card/60 px-4 py-3 text-center text-sm">
         <span className="font-display text-lg text-primary">{resultCount}</span>
-        <span className="text-muted-foreground"> {resultCount === 1 ? "stay" : "stays"} match</span>
+        <span className="text-muted-foreground"> {resultCount === 1 ? "home" : "homes"} match</span>
       </div>
     </div>
   );
 
   return (
     <>
-      {/* Desktop sidebar */}
       <aside className="sticky top-24 hidden h-fit w-72 shrink-0 rounded-sm border border-border/40 bg-card/40 p-6 lg:block">
         {Body}
       </aside>
 
-      {/* Mobile trigger */}
       <div className="mb-6 lg:hidden">
         <button
           onClick={() => setMobileOpen(true)}
           className="flex w-full items-center justify-center gap-2 rounded-sm border border-border/60 bg-card/40 px-4 py-3 text-xs uppercase tracking-wider transition-smooth hover:border-primary"
         >
-          <SlidersHorizontal className="h-3.5 w-3.5" /> Filters · {resultCount} stays
-          {(filters.amenities.length > 0 || filters.bedrooms > 0 || filters.bathrooms > 0 || filters.propertyType !== "Any") && (
-            <span className="ml-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] text-primary-foreground">
-              {filters.amenities.length + (filters.bedrooms > 0 ? 1 : 0) + (filters.bathrooms > 0 ? 1 : 0) + (filters.propertyType !== "Any" ? 1 : 0)}
-            </span>
-          )}
+          <SlidersHorizontal className="h-3.5 w-3.5" /> Filters · {resultCount} homes
         </button>
       </div>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -236,7 +249,7 @@ const PropertyFilters = ({
                   onClick={() => setMobileOpen(false)}
                   className="w-full bg-gradient-warm py-3 text-sm uppercase tracking-wider text-primary-foreground"
                 >
-                  Show {resultCount} stays
+                  Show {resultCount} homes
                 </button>
               </div>
             </motion.div>
