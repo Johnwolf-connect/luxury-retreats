@@ -53,6 +53,7 @@ const PropertyFilters = ({
   onClear: () => void;
   mobileOpen: boolean;
   setMobileOpen: (v: boolean) => void;
+  variant?: "sidebar" | "inline";
 }) => {
   const toggleAmenity = (k: string) => {
     onChange({
