@@ -46,6 +46,7 @@ const PropertyFilters = ({
   onClear,
   mobileOpen,
   setMobileOpen,
+  variant = "sidebar",
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
