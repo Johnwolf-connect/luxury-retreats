@@ -5,9 +5,9 @@ const Testimonials = () => {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
       <div className="mb-14 text-center">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Guest Stories</p>
+        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Client Stories</p>
         <h2 className="mx-auto max-w-3xl font-display text-4xl leading-tight sm:text-5xl lg:text-6xl">
-          Words from those who stayed.
+          Words from buyers, sellers and investors.
         </h2>
       </div>
 

@@ -23,9 +23,9 @@ const TestimonialsCarousel = () => {
       onMouseLeave={() => setPaused(false)}
     >
       <div className="mb-14 text-center">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Guest Stories</p>
+        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-primary">Client Stories</p>
         <h2 className="mx-auto max-w-3xl font-display text-4xl leading-tight sm:text-5xl lg:text-6xl">
-          Words from those who stayed.
+          Words from buyers, sellers and investors.
         </h2>
       </div>
 
