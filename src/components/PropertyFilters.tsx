@@ -207,6 +207,10 @@ const PropertyFilters = ({
     </div>
   );
 
+  if (variant === "inline") {
+    return <div>{Body}</div>;
+  }
+
   return (
     <>
       <aside className="sticky top-24 hidden h-fit w-72 shrink-0 rounded-sm border border-border/40 bg-card/40 p-6 lg:block">
