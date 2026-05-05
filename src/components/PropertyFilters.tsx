@@ -46,6 +46,7 @@ const PropertyFilters = ({
   onClear,
   mobileOpen,
   setMobileOpen,
+  variant = "sidebar",
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
@@ -53,6 +54,7 @@ const PropertyFilters = ({
   onClear: () => void;
   mobileOpen: boolean;
   setMobileOpen: (v: boolean) => void;
+  variant?: "sidebar" | "inline";
 }) => {
   const toggleAmenity = (k: string) => {
     onChange({
@@ -204,6 +206,10 @@ const PropertyFilters = ({
       </div>
     </div>
   );
+
+  if (variant === "inline") {
+    return <div>{Body}</div>;
+  }
 
   return (
     <>
