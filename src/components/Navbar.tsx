@@ -21,11 +21,17 @@ const Navbar = () => {
           Maison Georgia<span className="text-primary">.</span>
         </Link>
         <div className="hidden items-center gap-10 text-sm text-foreground/80 md:flex">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="transition-smooth hover:text-primary">
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.isRoute ? (
+              <Link key={l.href} to={l.href} className="transition-smooth hover:text-primary">
+                {l.label}
+              </Link>
+            ) : (
+              <a key={l.href} href={l.href} className="transition-smooth hover:text-primary">
+                {l.label}
+              </a>
+            )
+          )}
         </div>
         <div className="flex items-center gap-4">
           <a href="tel:+14045550199" className="hidden items-center gap-2 text-sm text-foreground/80 transition-smooth hover:text-primary md:flex">
