@@ -380,6 +380,7 @@ const SearchPage = () => {
                 onClear={() => setFilters(DEFAULT_FILTERS)}
                 mobileOpen={false}
                 setMobileOpen={() => {}}
+                variant="inline"
               />
               <button
                 onClick={() => setFiltersOpen(false)}

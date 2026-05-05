@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
+  { href: "/search", label: "Search", isRoute: true },
   { href: "#listings", label: "Listings" },
   { href: "#neighborhoods", label: "Neighborhoods" },
   { href: "#market", label: "Market Insights" },
