@@ -45,8 +45,8 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES */}
-      <div>
+      {/* FEATURES - Fixed Layout */}
+      <div className="min-h-0">
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
         <button 
@@ -56,10 +56,10 @@ const PropertyFilters = () => {
           <span className="text-4xl leading-none">+</span> Add Features
         </button>
 
-        {/* Selected Tags - Better contained */}
+        {/* Selected Tags - Contained */}
         {selectedAmenities.length > 0 && (
-          <div className="mt-4 max-w-full">
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-4">
+            <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
               {selectedAmenities.map((item, i) => (
                 <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap">
                   {item}
@@ -72,12 +72,12 @@ const PropertyFilters = () => {
                 </div>
               ))}
             </div>
-            <button onClick={clearAll} className="text-red-500 text-sm font-medium underline mt-2">Clear all</button>
+            <button onClick={clearAll} className="text-red-500 text-sm font-medium underline mt-2 block">Clear all</button>
           </div>
         )}
       </div>
 
-      {/* Improved Modal - Closer to Photoshop */}
+      {/* Modal - More polished */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
