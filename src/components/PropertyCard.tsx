@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const PropertyCard = ({ property }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    setIsFavorited(favorites.some(f => f.id === property.id));
+  }, [property.id]);
+
+  const toggleFavorite = () => {
+    let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+    if (isFavorited) {
+      favorites = favorites.filter(f => f.id !== property.id);
+    } else {
+      favorites.push(property);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    setIsFavorited(!isFavorited);
+  };
+
   return (
     <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group cursor-pointer">
-      {/* Image */}
       <div className="relative h-64 overflow-hidden">
         <img 
-          src={property.image || "https://picsum.photos/id/1015/600/400"} 
+          src={property.image} 
           alt={property.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
@@ -15,12 +35,14 @@ const PropertyCard = ({ property }) => {
           {property.status || "FOR SALE"}
         </div>
 
-        <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:bg-red-50 transition">
-          ❤️
+        <button 
+          onClick={toggleFavorite}
+          className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:bg-red-50 transition"
+        >
+          {isFavorited ? "❤️" : "♡"}
         </button>
       </div>
 
-      {/* Content */}
       <div className="p-6">
         <div className="text-3xl font-semibold text-gray-900 mb-1">
           {property.price}
