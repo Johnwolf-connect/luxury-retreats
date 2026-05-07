@@ -9,7 +9,7 @@ const PropertyCard = ({ property }) => {
   }, [property.id]);
 
   const toggleFavorite = (e) => {
-    e.stopPropagation(); // Prevent card click if any
+    e.stopPropagation();
 
     let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
