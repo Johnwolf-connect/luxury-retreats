@@ -22,7 +22,7 @@ const PropertyFilters = () => {
 
   return (
     <div className="space-y-8 pr-4">
-      {/* Bedrooms */}
+      {/* Bedrooms & Bathrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BEDROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -34,7 +34,6 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* Bathrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BATHROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -46,7 +45,7 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES - Matching Photoshop */}
+      {/* FEATURES */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
@@ -57,38 +56,45 @@ const PropertyFilters = () => {
           <span className="text-4xl leading-none">+</span> Add Features
         </button>
 
-        {/* Selected Tags */}
+        {/* Selected Tags - Better contained */}
         {selectedAmenities.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            {selectedAmenities.map((item, i) => (
-              <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2">
-                {item}
-                <button onClick={() => setSelectedAmenities(prev => prev.filter(x => x !== item))} className="text-lg leading-none hover:text-red-500">×</button>
-              </div>
-            ))}
-            <button onClick={clearAll} className="text-red-500 text-sm font-medium underline">Clear all</button>
+          <div className="mt-4 max-w-full">
+            <div className="flex flex-wrap gap-2">
+              {selectedAmenities.map((item, i) => (
+                <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                  {item}
+                  <button 
+                    onClick={() => setSelectedAmenities(prev => prev.filter(x => x !== item))} 
+                    className="text-lg leading-none hover:text-red-500"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button onClick={clearAll} className="text-red-500 text-sm font-medium underline mt-2">Clear all</button>
           </div>
         )}
       </div>
 
-      {/* Modal */}
+      {/* Improved Modal - Closer to Photoshop */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-            <div className="flex justify-between items-center mb-6">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
+            <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-semibold">Select Features</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-3xl text-gray-400 hover:text-gray-600">×</button>
             </div>
             
-            <div className="grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-2">
               {AMENITY_OPTIONS.map(amenity => (
                 <button
                   key={amenity}
                   onClick={() => toggleAmenity(amenity)}
-                  className={`p-4 rounded-2xl border text-left transition-all ${
+                  className={`p-5 rounded-2xl border text-left transition-all text-base ${
                     selectedAmenities.includes(amenity) 
                       ? 'border-amber-500 bg-amber-50 font-medium' 
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   {amenity}
@@ -105,7 +111,7 @@ const PropertyFilters = () => {
               </button>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="flex-1 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl font-semibold"
+                className="flex-1 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl font-semibold text-lg"
               >
                 Done ({selectedAmenities.length})
               </button>
