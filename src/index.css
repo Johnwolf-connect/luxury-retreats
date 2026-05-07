@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap');
-@import 'leaflet/dist/leaflet.css';
 
 @tailwind base;
 @tailwind components;
@@ -7,108 +6,55 @@
 
 @layer base {
   :root {
-    /* Warm dark luxury palette */
-    --background: 24 12% 8%;
-    --foreground: 36 30% 92%;
-
-    --card: 24 10% 11%;
-    --card-foreground: 36 30% 92%;
-
-    --popover: 24 10% 11%;
-    --popover-foreground: 36 30% 92%;
-
-    /* Amber gold primary */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
     --primary: 35 65% 58%;
-    --primary-foreground: 24 20% 10%;
-    --primary-glow: 38 80% 68%;
-
-    --secondary: 24 8% 16%;
-    --secondary-foreground: 36 30% 92%;
-
-    --muted: 24 8% 14%;
-    --muted-foreground: 36 12% 62%;
-
-    --accent: 18 55% 52%;
-    --accent-foreground: 36 30% 96%;
-
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 36 30% 96%;
-
-    --border: 30 10% 18%;
-    --input: 30 10% 18%;
-    --ring: 35 65% 58%;
-
-    --radius: 0.25rem;
-
-    /* Gradients */
-    --gradient-warm: linear-gradient(135deg, hsl(35 65% 58%), hsl(18 70% 50%));
-    --gradient-hero: linear-gradient(180deg, hsl(24 12% 8% / 0.2) 0%, hsl(24 12% 8% / 0.5) 50%, hsl(24 12% 8% / 0.95) 100%);
-    --gradient-card: linear-gradient(180deg, transparent 50%, hsl(24 12% 6% / 0.95) 100%);
-
-    /* Shadows */
-    --shadow-elegant: 0 20px 60px -20px hsl(24 30% 2% / 0.6);
-    --shadow-glow: 0 0 60px hsl(35 65% 58% / 0.25);
-    --shadow-card: 0 10px 40px -15px hsl(24 30% 2% / 0.5);
-
-    --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --muted: 0 0% 94%;
+    --border: 214 32% 91%;
+    --radius: 20px;
   }
 }
 
-@layer base {
-  * { @apply border-border; }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv11";
-  }
-  h1, h2, h3, h4, .font-display {
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
-    letter-spacing: -0.02em;
-  }
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
-@layer utilities {
-  .text-gradient-warm {
-    background: var(--gradient-warm);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .bg-gradient-warm { background: var(--gradient-warm); }
-  .bg-gradient-hero { background: var(--gradient-hero); }
-  .bg-gradient-card { background: var(--gradient-card); }
-  .shadow-elegant { box-shadow: var(--shadow-elegant); }
-  .shadow-glow { box-shadow: var(--shadow-glow); }
-  .shadow-card { box-shadow: var(--shadow-card); }
-  .transition-smooth { transition: all 0.5s var(--transition-smooth); }
+/* Premium Card Styling */
+.card {
+  background-color: white !important;
+  border-radius: 20px !important;
+  border: 1px solid #f0f0f0 !important;
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.1) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Leaflet dark theme tweaks */
-.leaflet-container {
-  background: hsl(var(--background));
-  font-family: inherit;
-}
-.leaflet-tile {
-  filter: brightness(0.55) contrast(1.1) saturate(0.7) hue-rotate(-10deg);
-}
-.leaflet-control-attribution {
-  background: hsl(var(--card) / 0.7) !important;
-  color: hsl(var(--muted-foreground)) !important;
-  backdrop-filter: blur(6px);
-  font-size: 10px !important;
-}
-.leaflet-control-attribution a { color: hsl(var(--primary)) !important; }
-.leaflet-control-zoom a {
-  background: hsl(var(--card)) !important;
-  color: hsl(var(--foreground)) !important;
-  border-color: hsl(var(--border)) !important;
-}
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: hsl(var(--card)) !important;
-  color: hsl(var(--foreground)) !important;
-  border-radius: 4px !important;
+.card:hover {
+  box-shadow: 0 25px 60px -15px rgb(0 0 0 / 0.15) !important;
+  transform: translateY(-8px) !important;
 }
 
-/* Hide scrollbar utility for horizontal galleries */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.card img {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.card:hover img {
+  transform: scale(1.08) !important;
+}
+
+/* Selected feature tags */
+.amenity-tag {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}

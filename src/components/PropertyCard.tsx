@@ -1,86 +1,53 @@
-import { Square, BedDouble, Bath, ArrowUpRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import type { Property } from "@/data/properties";
+import React, { useState, useEffect } from "react";
 
-const formatPrice = (p: Property) =>
-  p.listingType === "Rent"
-    ? `$${p.price.toLocaleString()}/mo`
-    : `$${p.price.toLocaleString()}`;
+const PropertyCard = ({ property }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
 
-const statusStyle = (s: Property["status"]) => {
-  switch (s) {
-    case "New": return "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30";
-    case "Coming Soon": return "bg-amber-500/15 text-amber-300 ring-amber-400/30";
-    case "Pending": return "bg-foreground/10 text-foreground/70 ring-border/50";
-    default: return "bg-primary/15 text-primary ring-primary/30";
-  }
-};
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorited(favorites.some(f => f.id === property.id));
+  }, [property.id]);
 
-const PropertyCard = ({ property, index = 0 }: { property: Property; index?: number }) => {
+  const toggleFavorite = () => {
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    
+    if (isFavorited) {
+      favorites = favorites.filter(f => f.id !== property.id);
+    } else {
+      favorites.push(property);
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    setIsFavorited(!isFavorited);
+  };
+
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6 }}
-      className="group relative"
-    >
-      <Link
-        to={`/property/${property.id}`}
-        className="block overflow-hidden rounded-sm bg-card shadow-card transition-shadow duration-500 hover:shadow-elegant"
-      >
-        <div className="relative aspect-[4/5] overflow-hidden">
-          <img
-            src={property.cover}
-            alt={`${property.name} in ${property.location}`}
-            width={1280}
-            height={1600}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.08]"
-          />
-          <div className="absolute inset-0 bg-gradient-card opacity-90" />
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100">
+      <div className="relative h-64">
+        <img 
+          src={property.image} 
+          alt={property.title}
+          className="w-full h-full object-cover"
+        />
+        <button 
+          onClick={toggleFavorite}
+          className="absolute top-4 right-4 bg-white p-3 rounded-full shadow hover:bg-red-50 transition"
+        >
+          {isFavorited ? '❤️' : '♡'}
+        </button>
+      </div>
 
-          <div className="absolute inset-x-4 top-4 flex items-start justify-between">
-            <span className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] uppercase tracking-wider ring-1 backdrop-blur-md ${statusStyle(property.status)}`}>
-              <span className="h-1.5 w-1.5 rounded-full bg-current shadow-[0_0_8px_currentColor]" />
-              {property.status}
-            </span>
-            <span className="rounded-full bg-background/40 px-3 py-1 text-[10px] uppercase tracking-wider backdrop-blur-md">
-              For {property.listingType}
-            </span>
-          </div>
-
-          <div className="absolute inset-x-0 bottom-0 p-6">
-            <p className="text-xs uppercase tracking-[0.2em] text-primary/90">
-              {property.location} · {property.country}
-            </p>
-            <h3 className="mt-2 font-display text-2xl leading-tight text-foreground">
-              {property.name}
-            </h3>
-            <p className="mt-1 truncate text-xs text-foreground/55">{property.address}</p>
-
-            <div className="mt-5 flex items-end justify-between border-t border-border/40 pt-4">
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-foreground/60">
-                <span className="flex items-center gap-1.5"><BedDouble className="h-3.5 w-3.5" />{property.bedrooms} bd</span>
-                <span className="flex items-center gap-1.5"><Bath className="h-3.5 w-3.5" />{property.bathrooms} ba</span>
-                <span className="flex items-center gap-1.5"><Square className="h-3.5 w-3.5" />{property.sqft.toLocaleString()} sf</span>
-              </div>
-              <p className="text-right">
-                <span className="font-display text-xl text-primary">{formatPrice(property)}</span>
-              </p>
-            </div>
-
-            <div className="pointer-events-none mt-4 flex items-center gap-2 text-[11px] uppercase tracking-[0.25em] text-primary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-              <ArrowUpRight className="h-3 w-3" />
-              View listing
-            </div>
-          </div>
+      <div className="p-6">
+        <div className="text-3xl font-semibold mb-1">{property.price}</div>
+        <div className="text-gray-600 mb-3">{property.location}</div>
+        
+        <div className="text-sm text-gray-600 flex gap-4">
+          <span>{property.beds} beds</span>
+          <span>{property.baths} baths</span>
+          {property.sqft && <span>{property.sqft} sf</span>}
         </div>
-      </Link>
-    </motion.article>
+      </div>
+    </div>
   );
 };
 
