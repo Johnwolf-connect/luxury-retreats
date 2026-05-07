@@ -1,5 +1,13 @@
 import React from "react";
 
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+  }).format(price);
+};
+
 const PropertyCard = ({ property }) => {
   return (
     <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
@@ -20,10 +28,10 @@ const PropertyCard = ({ property }) => {
         </button>
       </div>
 
-      {/* Content - Much more readable */}
+      {/* Content */}
       <div className="p-6">
         <div className="text-3xl font-semibold text-gray-900 mb-1">
-          {property.price}
+          {formatPrice(property.price)}
         </div>
         
         <div className="text-gray-600 mb-4 font-medium line-clamp-1">
@@ -33,7 +41,7 @@ const PropertyCard = ({ property }) => {
         <div className="flex gap-5 text-sm text-gray-600 mb-5">
           <span><strong>{property.beds}</strong> beds</span>
           <span><strong>{property.baths}</strong> baths</span>
-          {property.sqft && <span><strong>{property.sqft}</strong> sf</span>}
+          {property.sqft && <span><strong>{property.sqft.toLocaleString()}</strong> sf</span>}
         </div>
 
         <div className="text-xs text-gray-500 border-t pt-4">
