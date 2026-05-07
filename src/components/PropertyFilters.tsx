@@ -1,5 +1,17 @@
 import React, { useState } from "react";
 
+export type Filters = {
+  bedrooms: string;
+  bathrooms: string;
+  amenities: string[];
+};
+
+export const DEFAULT_FILTERS: Filters = {
+  bedrooms: "Any",
+  bathrooms: "Any",
+  amenities: [],
+};
+
 const AMENITY_OPTIONS = [
   "Pool", "Kitchen Island", "Smart Home", "Wine Cellar", 
   "Home Theater", "Gym", "Spa", "Guest House", 
@@ -22,7 +34,6 @@ const PropertyFilters = () => {
 
   return (
     <div className="space-y-8 pr-4">
-      {/* Bedrooms & Bathrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BEDROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -45,7 +56,6 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES - Fixed Layout */}
       <div className="min-h-0">
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
@@ -56,10 +66,9 @@ const PropertyFilters = () => {
           <span className="text-4xl leading-none">+</span> Add Features
         </button>
 
-        {/* Selected Tags - Contained */}
         {selectedAmenities.length > 0 && (
           <div className="mt-4">
-            <div className="flex flex-wrap gap-2 max-w-full overflow-hidden">
+            <div className="flex flex-wrap gap-2">
               {selectedAmenities.map((item, i) => (
                 <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap">
                   {item}
@@ -77,7 +86,6 @@ const PropertyFilters = () => {
         )}
       </div>
 
-      {/* Modal - More polished */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
