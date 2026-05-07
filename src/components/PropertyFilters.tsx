@@ -19,10 +19,10 @@ const AMENITY_OPTIONS = [
 ];
 
 const PropertyFilters = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const toggleAmenity = (amenity) => {
+  const toggleAmenity = (amenity: string) => {
     if (selectedAmenities.includes(amenity)) {
       setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
     } else {
@@ -34,6 +34,7 @@ const PropertyFilters = () => {
 
   return (
     <div className="space-y-8 pr-4">
+      {/* Bedrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BEDROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -45,6 +46,7 @@ const PropertyFilters = () => {
         </div>
       </div>
 
+      {/* Bathrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BATHROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -56,7 +58,7 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES - Better Contained */}
+      {/* FEATURES - Fixed Layout */}
       <div className="min-h-0">
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
@@ -69,9 +71,9 @@ const PropertyFilters = () => {
 
         {selectedAmenities.length > 0 && (
           <div className="mt-4 w-full">
-            <div className="flex flex-wrap gap-2 max-w-full">
+            <div className="flex flex-wrap gap-2">
               {selectedAmenities.map((item, i) => (
-                <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap">
                   {item}
                   <button 
                     onClick={() => setSelectedAmenities(prev => prev.filter(x => x !== item))} 
