@@ -12,12 +12,6 @@ export const DEFAULT_FILTERS: Filters = {
   amenities: [],
 };
 
-const AMENITY_OPTIONS = [
-  "Pool", "Kitchen Island", "Smart Home", "Wine Cellar", 
-  "Home Theater", "Gym", "Spa", "Guest House", 
-  "Furnished", "Rooftop Terrace"
-];
-
 const PropertyFilters = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
@@ -34,7 +28,6 @@ const PropertyFilters = () => {
 
   return (
     <div className="space-y-8 pr-4">
-      {/* Bedrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BEDROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -46,7 +39,6 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* Bathrooms */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">BATHROOMS</p>
         <div className="flex flex-wrap gap-2">
@@ -58,13 +50,12 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="w-full py-6 border-2 border-dashed border-amber-400 rounded-3xl text-amber-600 font-medium text-lg flex items-center justify-center gap-3"
+          className="w-full py-6 border-2 border-dashed border-amber-400 rounded-3xl text-amber-600 font-medium text-lg"
         >
           + Add Features
         </button>
@@ -82,18 +73,18 @@ const PropertyFilters = () => {
         )}
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-md">
             <h3 className="text-2xl font-semibold mb-6">Select Features</h3>
+            <p className="mb-6">Click amenities below:</p>
             
             <div className="grid grid-cols-2 gap-3">
-              {AMENITY_OPTIONS.map(amenity => (
+              {["Pool", "Kitchen Island", "Smart Home", "Wine Cellar", "Home Theater", "Gym", "Spa", "Guest House"].map(amenity => (
                 <button
                   key={amenity}
                   onClick={() => toggleAmenity(amenity)}
-                  className={`p-4 rounded-2xl border text-left ${
+                  className={`p-4 rounded-2xl border ${
                     selectedAmenities.includes(amenity) ? 'bg-amber-50 border-amber-500' : 'border-gray-200 hover:bg-gray-50'
                   }`}
                 >
@@ -102,10 +93,12 @@ const PropertyFilters = () => {
               ))}
             </div>
 
-            <div className="mt-8 flex gap-3">
-              <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 border rounded-2xl">Cancel</button>
-              <button onClick={() => setIsModalOpen(false)} className="flex-1 py-4 bg-amber-600 text-white rounded-2xl">Done ({selectedAmenities.length})</button>
-            </div>
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="mt-8 w-full py-4 bg-amber-600 text-white rounded-2xl font-medium"
+            >
+              Done ({selectedAmenities.length})
+            </button>
           </div>
         </div>
       )}
