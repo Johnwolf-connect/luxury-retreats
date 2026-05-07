@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const DEFAULT_FILTERS = {
+export type Filters = {
+  price: [number, number];
+  bedrooms: number;
+  bathrooms: number;
+  amenities: string[];
+  propertyType: string;
+  listingType: "Any" | "Sale" | "Rent";
+};
+
+export const DEFAULT_FILTERS: Filters = {
   price: [500000, 5000000],
   bedrooms: 0,
   bathrooms: 0,
@@ -9,7 +18,26 @@ export const DEFAULT_FILTERS = {
   listingType: "Any",
 };
 
+const AMENITY_OPTIONS = [
+  "Pool", "Chef Kitchen", "Smart Home", "Gated", "Wine Cellar",
+  "EV Charging", "Home Theater", "Gym", "Spa", "Tennis Court",
+  "Guest House", "Acreage"
+];
+
 const PropertyFilters = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+
+  const toggleAmenity = (amenity) => {
+    if (selectedAmenities.includes(amenity)) {
+      setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    }
+  };
+
+  const clearAll = () => setSelectedAmenities([]);
+
   return (
     <div className="space-y-8 pr-4">
       <div>
@@ -32,13 +60,70 @@ const PropertyFilters = () => {
 
       <div>
         <p className="mb-3 text-sm font-medium">FEATURES</p>
+        
         <button 
-          onClick={() => alert("Add Features clicked!\n\nWe'll improve this next.")}
-          className="w-full py-6 border-2 border-dashed border-amber-400 rounded-3xl text-amber-600 font-medium hover:bg-amber-50 flex items-center justify-center gap-3 text-lg"
+          onClick={() => setIsModalOpen(true)}
+          className="w-full flex items-center justify-center gap-3 py-6 border-2 border-dashed border-amber-400 rounded-3xl hover:bg-amber-50 text-amber-600 font-medium text-lg"
         >
           <span className="text-4xl">+</span> Add Features
         </button>
+
+        {/* Selected Tags - Clean like your Photoshop */}
+        {selectedAmenities.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {selectedAmenities.map((item, i) => (
+              <div key={i} className="bg-amber-100 text-amber-800 px-4 py-1.5 rounded-full text-sm flex items-center gap-2">
+                {item}
+                <button onClick={() => setSelectedAmenities(prev => prev.filter(x => x !== item))} className="text-lg leading-none hover:text-red-500">×</button>
+              </div>
+            ))}
+            <button onClick={clearAll} className="text-red-500 text-xs underline ml-2">Clear all</button>
+          </div>
+        )}
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-semibold">Select Features</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-3xl text-gray-400 hover:text-gray-600">×</button>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 max-h-[420px] overflow-y-auto">
+              {AMENITY_OPTIONS.map(amenity => (
+                <button
+                  key={amenity}
+                  onClick={() => toggleAmenity(amenity)}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    selectedAmenities.includes(amenity) 
+                      ? 'border-amber-500 bg-amber-50 font-medium' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  {amenity}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex gap-3 mt-8">
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1 py-4 border rounded-2xl font-medium hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl font-semibold"
+              >
+                Done ({selectedAmenities.length})
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
