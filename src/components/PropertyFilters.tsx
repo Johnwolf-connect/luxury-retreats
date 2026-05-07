@@ -56,6 +56,7 @@ const PropertyFilters = () => {
         </div>
       </div>
 
+      {/* FEATURES - Better Contained */}
       <div className="min-h-0">
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
@@ -67,14 +68,14 @@ const PropertyFilters = () => {
         </button>
 
         {selectedAmenities.length > 0 && (
-          <div className="mt-4">
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-4 w-full">
+            <div className="flex flex-wrap gap-2 max-w-full">
               {selectedAmenities.map((item, i) => (
-                <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+                <div key={i} className="bg-amber-100 text-amber-800 px-4 py-2 rounded-3xl text-sm font-medium flex items-center gap-2 whitespace-nowrap overflow-hidden text-ellipsis">
                   {item}
                   <button 
                     onClick={() => setSelectedAmenities(prev => prev.filter(x => x !== item))} 
-                    className="text-lg leading-none hover:text-red-500"
+                    className="text-lg leading-none hover:text-red-500 flex-shrink-0"
                   >
                     ×
                   </button>
@@ -86,6 +87,7 @@ const PropertyFilters = () => {
         )}
       </div>
 
+      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl">
