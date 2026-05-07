@@ -60,15 +60,14 @@ const PropertyFilters = () => {
 
       <div>
         <p className="mb-3 text-sm font-medium">FEATURES</p>
-        
         <button 
           onClick={() => setIsModalOpen(true)}
           className="w-full flex items-center justify-center gap-3 py-6 border-2 border-dashed border-amber-400 rounded-3xl hover:bg-amber-50 text-amber-600 font-medium text-lg"
         >
-          <span className="text-4xl">+</span> Add Features
+          <span className="text-4xl leading-none">+</span>
+          <span>Add Features</span>
         </button>
 
-        {/* Selected Tags - Clean like your Photoshop */}
         {selectedAmenities.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-4">
             {selectedAmenities.map((item, i) => (
@@ -82,7 +81,7 @@ const PropertyFilters = () => {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Improved Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
