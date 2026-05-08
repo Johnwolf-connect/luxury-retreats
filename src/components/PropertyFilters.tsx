@@ -15,15 +15,10 @@ export const DEFAULT_FILTERS: Filters = {
 const AMENITY_OPTIONS = [
   "Pool",
   "Kitchen Island",
-  "Wine Cellar",
-  "Gym",
+  "Balcony",
   "Guest House",
-  "Rooftop Terrace",
-  "Private Elevator",
-  "Waterfront",
   "Basement",
-  "Laundry Room",
-  "Balcony"
+  "Laundry Room"
 ];
 
 const PropertyFilters = () => {
