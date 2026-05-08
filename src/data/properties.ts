@@ -107,4 +107,29 @@ export const properties: Property[] = [
   }
 ];
 
+// Testimonials for TestimonialsCarousel
+export const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Chen",
+    title: "CEO, Tech Startup",
+    quote: "The team helped us find our dream home in Buckhead in under 30 days. Exceptional service.",
+    location: "Buckhead"
+  },
+  {
+    id: 2,
+    name: "Michael Rodriguez",
+    title: "Private Equity Partner",
+    quote: "Their knowledge of the Atlanta luxury market is unmatched. Found us a perfect investment property.",
+    location: "Virginia-Highland"
+  },
+  {
+    id: 3,
+    name: "Dr. Emily Patel",
+    title: "Neurosurgeon",
+    quote: "From the first showing to closing, everything was handled with white-glove service.",
+    location: "Alpharetta"
+  }
+];
+
 export default properties;
