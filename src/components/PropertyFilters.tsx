@@ -58,7 +58,7 @@ const PropertyFilters = () => {
         </div>
       </div>
 
-      {/* FEATURES - Your Photoshop Style */}
+      {/* FEATURES - Matching Photoshop */}
       <div>
         <p className="mb-3 text-xs font-semibold tracking-widest text-neutral-500">FEATURES</p>
         
@@ -82,7 +82,7 @@ const PropertyFilters = () => {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Modal - Close to your Photoshop */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
